@@ -53,6 +53,16 @@
 			if (grid.getOptions().syncColumnCellResize)
 				$input.attr("checked", "checked");
 
+			// Toggle active class
+			$('li', $menu).each(function() {
+				if ($('input:checked', this).length) {
+				    $('label', this).addClass('active');
+				}
+				$('input', this).click(function() {
+				    $(this).next('label').toggleClass('active');
+				});
+			});
+
 			$menu
 				.css("top", e.pageY - 10)
 				.css("left", e.pageX - 10)
