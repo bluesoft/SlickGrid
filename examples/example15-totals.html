@@ -26,15 +26,15 @@
         var grid,
         
             columns = [
-                { id:"row", name:"Row", field:"row", width: 100 },
-                { id:"date", name:"Date", field:"date", width: 100 },
-                { id:"cost", name:"Cost", field:"cost", width: 100 },
-                { id:"revenue", name:"Revenue", field:"revenue", width: 100 },
-                { id:"sales", name:"Sales", field:"sales", width: 100 },
-                { id:"income", name:"Income", field:"income", width: 100 },
-                { id:"supply", name:"Supply", field:"supply", width: 100 },
-                { id:"demand", name:"Demand", field:"demand", width: 100 },
-                { id:"roi", name:"ROI", field:"roi", width: 100 }
+                { id:"row", name:"Row", field:"row" },
+                { id:"date", name:"Date", field:"date" },
+                { id:"cost", name:"Cost", field:"cost" },
+                { id:"revenue", name:"Revenue", field:"revenue" },
+                { id:"sales", name:"Sales", field:"sales" },
+                { id:"income", name:"Income", field:"income" },
+                { id:"supply", name:"Supply", field:"supply" },
+                { id:"demand", name:"Demand", field:"demand" },
+                { id:"roi", name:"ROI", field:"roi" }
             ],
 
             totals = {
@@ -80,6 +80,13 @@
             
             var columnpicker = new Slick.Controls.ColumnPicker(columns, grid);
 
+            // Update autosized column widths on window resize.
+            $(window).resize(function() {
+                if (grid.getOptions().forceFitColumns) {
+                    grid.autosizeColumns();
+                }
+            });
+
         });
 
     </script>
@@ -88,7 +95,7 @@
 
 <body>
 
-<div id="slickgrid" style="width: 600px; height: 500px;"></div>
+<div id="slickgrid" style="width: 100%; height: 500px;"></div>
 
 </body>
 </html>
