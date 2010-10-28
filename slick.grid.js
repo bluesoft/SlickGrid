@@ -1118,7 +1118,7 @@ if (!jQuery.fn.drag) {
         function setColumns(columnDefinitions) {
             columns = columnDefinitions;
             removeAllRows();
-            createColumnHeaders($headers);
+            createColumnHeaders();
             removeCssRules();
             createCssRules();
             resizeAndRender();
