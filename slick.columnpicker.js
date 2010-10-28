@@ -11,7 +11,7 @@
 			grid.onHeaderContextMenu = displayContextMenu;
 			options = $.extend({}, defaults, options);
 
-			$menu = $("<span class='slick-columnpicker' style='display:none;position:absolute;z-index:20;' />").appendTo(document.body);
+			$menu = $("<div class='slick-columnpicker' style='display:none;position:absolute;z-index:20;' />").appendTo(document.body);
 
 			$menu.bind("mouseleave", function(e) { $(this).fadeOut(options.fadeSpeed) });
 			$menu.bind("click", updateColumn);
@@ -25,7 +25,7 @@
             var visibleColumns = grid.getColumns();
 			var $li, $input;
 			for (var i=0; i<columns.length; i++) {
-				$li = $("<li />").appendTo($menu);
+				$li = $("<div />").appendTo($menu);
 
 				$input = $("<input type='checkbox' />")
                         .attr("id", "columnpicker_" + i)
@@ -41,20 +41,20 @@
 			}
 
 			$("<hr/>").appendTo($menu);
-			$li = $("<li />").appendTo($menu);
+			$li = $("<div />").appendTo($menu);
 			$input = $("<input type='checkbox' id='autoresize' />").appendTo($li);
 			$("<label for='autoresize'>Force Fit Columns</label>").appendTo($li);
 			if (grid.getOptions().forceFitColumns)
 				$input.attr("checked", "checked");
 
-			$li = $("<li />").appendTo($menu);
+			$li = $("<div />").appendTo($menu);
 			$input = $("<input type='checkbox' id='syncresize' />").appendTo($li);
 			$("<label for='syncresize'>Synchronous Resizing</label>").appendTo($li);
 			if (grid.getOptions().syncColumnCellResize)
 				$input.attr("checked", "checked");
 
 			// Toggle active class
-			$('li', $menu).each(function() {
+			$('div', $menu).each(function() {
 				if ($('input:checked', this).length) {
 				    $('label', this).addClass('active');
 				}
