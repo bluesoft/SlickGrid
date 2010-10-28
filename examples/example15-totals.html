@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>SlickGrid example 15: Total rows</title>
+
+    <link rel="stylesheet" href="../css/smoothness/jquery-ui-1.8.5.custom.css" type="text/css" media="screen" charset="utf-8" />
+    <link rel="stylesheet" href="examples.css" type="text/css" media="screen" charset="utf-8" />
+
+    <script src="../lib/jquery-1.4.3.min.js" type="text/javascript"></script>
+    <script src="../lib/jquery-ui-1.8.5.custom.min.js" type="text/javascript"></script>
+
+    <!-- Slickgrid CSS -->
+    <link href="../slick.grid.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="../slick.columnpicker.css" media="screen" rel="stylesheet" type="text/css" />
+
+    <!-- Slickgrid JS -->
+    <script src="../lib/jquery.event.drag-2.0.min.js" type="text/javascript"></script>
+    <script src="../slick.grid.js" type="text/javascript"></script>
+    <script src="../slick.columnpicker.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+
+        var grid,
+        
+            columns = [
+                { id:"row", name:"Row", field:"row", width: 100 },
+                { id:"date", name:"Date", field:"date", width: 100 },
+                { id:"cost", name:"Cost", field:"cost", width: 100 },
+                { id:"revenue", name:"Revenue", field:"revenue", width: 100 },
+                { id:"sales", name:"Sales", field:"sales", width: 100 },
+                { id:"income", name:"Income", field:"income", width: 100 },
+                { id:"supply", name:"Supply", field:"supply", width: 100 },
+                { id:"demand", name:"Demand", field:"demand", width: 100 },
+                { id:"roi", name:"ROI", field:"roi", width: 100 }
+            ],
+
+            totals = {
+                row: '',
+                date: '',
+                cost: '$' + Math.round(Math.random() * 1000) + '.00',
+                revenue: '$' + Math.round(Math.random() * 100) + '.00',
+                sales: '$' + Math.round(Math.random() * 100) + '.00',
+                income: '$' + Math.round(Math.random() * 100) + '.00',
+                supply: Math.round(Math.random() * 100) + '%',
+                demand: Math.round(Math.random() * 100) + '%',
+                roi: Math.round(Math.random() * 100) + ' : 1'
+            },
+
+            options = {
+                rowHeight: 24,
+                showTotalsHeader: true,
+                showTotalsFooter: true,
+                syncColumnCellResize: true
+            };
+
+        $().ready(function() {
+    
+            var element = $('#slickgrid');
+    
+            var data = [];
+    
+            for (var i = 0; i < 1000; i++) {
+                data[i] = {
+                    row: (i + 1),
+                    date: "01/01/2010",
+                    cost: '$' + Math.round(Math.random() * 1000) + '.00',
+                    revenue: '$' + Math.round(Math.random() * 100) + '.00',
+                    sales: '$' + Math.round(Math.random() * 100) + '.00',
+                    income: '$' + Math.round(Math.random() * 100) + '.00',
+                    supply: Math.round(Math.random() * 100) + '%',
+                    demand: Math.round(Math.random() * 100) + '%',
+                    roi: Math.round(Math.random() * 100) + ' : 1'
+                };
+            }
+            
+            grid = new Slick.Grid(element, data, columns, options, totals);
+            
+            var columnpicker = new Slick.Controls.ColumnPicker(columns, grid);
+
+        });
+
+    </script>
+
+</head>
+
+<body>
+
+<div id="slickgrid" style="width: 600px; height: 500px;"></div>
+
+</body>
+</html>

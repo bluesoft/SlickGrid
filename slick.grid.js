@@ -208,7 +208,7 @@ if (!jQuery.fn.drag) {
     // SlickGrid class implementation (available as Slick.Grid)
 
     /** @constructor */
-    function SlickGrid(container,data,columns,options) {
+    function SlickGrid(container,data,columns,options,totals) {
         /// <summary>
         /// Create and manage virtual grid in the specified $container,
         /// connecting it to the specified data source. Data is presented
@@ -236,6 +236,8 @@ if (!jQuery.fn.drag) {
             editorLock: Slick.GlobalEditorLock,
             showSecondaryHeaderRow: false,
             secondaryHeaderRowHeight: 25,
+            showTotalsHeader: false,
+            showTotalsFooter: false,
             syncColumnCellResize: false,
             enableAutoTooltips: true,
             toolTipMaxLength: null,
@@ -272,6 +274,10 @@ if (!jQuery.fn.drag) {
         var self = this;
         var $headerScroller;
         var $headers;
+        var $totalScroller;
+        var $totals;
+        var $totalFooterScroller;
+        var $totalsFooter;
         var $secondaryHeaderScroller;
         var $secondaryHeaders;
         var $viewport;
@@ -368,21 +374,30 @@ if (!jQuery.fn.drag) {
             $secondaryHeaderScroller = $("<div class='slick-header-secondary ui-state-default' style='overflow:hidden;position:relative;' />").appendTo($container);
             $secondaryHeaders = $("<div class='slick-header-columns-secondary' style='width:100000px' />").appendTo($secondaryHeaderScroller);
 
-            if (!options.showSecondaryHeaderRow) {
-                $secondaryHeaderScroller.hide();
-            }
+            $totalScroller = $("<div class='slick-totals ui-state-default' style='overflow:hidden;position:relative;' />").appendTo($container);
+            $totals = $("<div class='slick-totals-columns' style='width:100000px' />").appendTo($totalScroller);
 
             $viewport = $("<div class='slick-viewport' tabIndex='0' hideFocus style='width:100%;overflow-x:auto;outline:0;position:relative;overflow-y:auto;'>").appendTo($container);
             $canvas = $("<div class='grid-canvas' tabIndex='0' hideFocus />").appendTo($viewport);
+
+            $totalFooterScroller = $("<div class='slick-totals ui-state-default' style='overflow:hidden;position:relative;' />").appendTo($container);
+            $totalsFooter = $("<div class='slick-totals-columns' style='width:100000px' />").appendTo($totalFooterScroller);
+
+            if (!options.showSecondaryHeaderRow) {
+                $secondaryHeaderScroller.hide();
+            }
+            if (!options.showTotalsHeader) {
+                $totalScroller.hide();
+            }
+            if (!options.showTotalsFooter) {
+                $totalFooterScroller.hide();
+            }
 
             // header columns and cells may have different padding/border skewing width calculations (box-sizing, hello?)
             // calculate the diff so we can set consistent sizes
             measureCellPaddingAndBorder();
 
-            $viewport.height(
-                $container.innerHeight() -
-                $headerScroller.outerHeight() -
-                (options.showSecondaryHeaderRow ? $secondaryHeaderScroller.outerHeight() : 0));
+            resizeViewportHeight();
 
             // for usability reasons, all text selection in SlickGrid is disabled
             // with the exception of input and textarea elements (selection must
@@ -501,6 +516,13 @@ if (!jQuery.fn.drag) {
             }
 
             $headers.empty();
+            if (options.showTotalsHeader) {
+                $totals.empty();
+            }
+            if (options.showTotalsFooter) {
+                $totalsFooter.empty();
+            }
+
             columnsById = {};
 
             for (i = 0; i < columns.length; i++) {
@@ -513,6 +535,17 @@ if (!jQuery.fn.drag) {
                     .attr("title", m.toolTip || m.name || "")
                     .data("fieldId", m.id)
                     .appendTo($headers);
+
+                if (totals && (options.showTotalsHeader || options.showTotalsFooter)) {
+                    var total = $("<div class='ui-state-default slick-totals-column c" + i + "' />")
+                        .html("<span class='slick-totals-name'>" + totals[m.id] + "</span>");
+                    if (options.showTotalsHeader) {
+                        $totals.append(total.clone());
+                    }
+                    if (options.showTotalsFooter) {
+                        $totalsFooter.append(total.clone());
+                    }
+                }
 
                 if (options.enableColumnReorder || m.sortable) {
                     header.hover(hoverBegin, hoverEnd);
@@ -1016,7 +1049,7 @@ if (!jQuery.fn.drag) {
                 previousTotal = total;
             }
 
-            for (i=0; i<columns.length; i++) {
+            for (i = 0; i < columns.length; i++) {
                 styleColumnWidth(i, columns[i].currentWidth = widths[i], true);
             }
 
@@ -1085,7 +1118,7 @@ if (!jQuery.fn.drag) {
         function setColumns(columnDefinitions) {
             columns = columnDefinitions;
             removeAllRows();
-            createColumnHeaders();
+            createColumnHeaders($headers);
             removeCssRules();
             createCssRules();
             resizeAndRender();
@@ -1311,16 +1344,22 @@ if (!jQuery.fn.drag) {
             invalidatePostProcessingResults(row);
         }
 
+        function resizeViewportHeight() {
+            $viewport.height(
+                $container.innerHeight() -
+                $headerScroller.outerHeight() -
+                (options.showSecondaryHeaderRow ? $secondaryHeaderScroller.outerHeight() : 0) -
+                (options.showTotalsHeader ? $totalScroller.outerHeight() : 0) -
+                (options.showTotalsFooter ? $totalFooterScroller.outerHeight() : 0));
+        }
+
         function resizeCanvas() {
             var newViewportH = options.rowHeight * (gridDataGetLength() + (options.enableAddRow ? 1 : 0) + (options.leaveSpaceForNewRows? numVisibleRows - 1 : 0));
             if (options.autoHeight) { // use computed height to set both canvas _and_ divMainScroller, effectively hiding scroll bars.
                 $viewport.height(newViewportH);
             }
             else {
-                $viewport.height(
-                        $container.innerHeight() -
-                        $headerScroller.outerHeight() -
-                        (options.showSecondaryHeaderRow ? $secondaryHeaderScroller.outerHeight() : 0));
+                resizeViewportHeight();
             }
 
             viewportW = $viewport.innerWidth();
@@ -1512,6 +1551,8 @@ if (!jQuery.fn.drag) {
                 prevScrollLeft = scrollLeft;
                 $headerScroller[0].scrollLeft = scrollLeft;
                 $secondaryHeaderScroller[0].scrollLeft = scrollLeft;
+                $totalScroller[0].scrollLeft = scrollLeft;
+                $totalFooterScroller[0].scrollLeft = scrollLeft;
             }
 
             if (!scrollDist) return;

@@ -6,13 +6,13 @@ classes should alter those!
 */
 
 
-.slick-header.ui-state-default {
+.slick-header.ui-state-default, .slick-totals.ui-state-default {
 	width: 100%;
 	overflow: hidden;
 	border-left: 0px;
 }
 
-.slick-header-columns {
+.slick-header-columns, .slick-totals-columns {
 	width: 999999px;
 	position: relative;
 	white-space: nowrap;
@@ -20,7 +20,7 @@ classes should alter those!
 	overflow: hidden;
 }
 
-.slick-header-column.ui-state-default {
+.slick-header-column.ui-state-default, .slick-totals-column.ui-state-default {
 	position: relative;
 	display: inline-block;
 	overflow: hidden;
@@ -34,6 +34,12 @@ classes should alter those!
 	border-top: 0px;
 	border-bottom: 0px;
 	float: left;
+}
+
+.slick-totals-column.ui-state-default {
+    background: #cef;
+    font-weight: bold;
+	padding: 4px 2px 4px 2px;
 }
 
 .slick-header-column-sorted {
