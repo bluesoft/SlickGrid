@@ -253,6 +253,7 @@ if (!jQuery.fn.drag) {
             name: "",
             resizable: true,
             sortable: false,
+            defaultToAscending: true,
             minWidth: 30
         };
 
@@ -584,7 +585,7 @@ if (!jQuery.fn.drag) {
                         }
                         else {
                             sortColumnId = column.id;
-                            sortAsc = true;
+                            sortAsc = column.defaultToAscending;
                         }
 
                         setSortColumn(sortColumnId,sortAsc);
