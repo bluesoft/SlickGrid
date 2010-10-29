@@ -20,36 +20,62 @@
     <script src="../lib/jquery.event.drag-2.0.min.js" type="text/javascript"></script>
     <script src="../slick.grid.js" type="text/javascript"></script>
     <script src="../slick.columnpicker.js" type="text/javascript"></script>
+    <script src="../slick.sortlib.js" type="text/javascript"></script>
 
     <script type="text/javascript">
+
+        // Random string generator for sort demo.
+        var randomString = function(length) {
+            var output = '';
+            var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            for (var i = 0; i < length; i++) {
+                output += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return output;
+        };
+
+        var zeroPad = function(number, length) {
+            var result = number.toString();
+            var pad = length - result.length;
+            while (pad > 0) {
+                result = '0' + result;
+                pad--;
+            }
+            return result;
+        };
+
+        var ampm = function() {
+            return (Math.round(Math.random())) ? 'am' : 'pm';
+        };
+        
+        /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
         var grid,
         
             columns = [
-                { id:"row", name:"Row", field:"row" },
-                { id:"date", name:"Date", field:"date" },
-                { id:"cost", name:"Cost", field:"cost" },
-                { id:"revenue", name:"Revenue", field:"revenue" },
-                { id:"sales", name:"Sales", field:"sales" },
-                { id:"income", name:"Income", field:"income" },
-                { id:"supply", name:"Supply", field:"supply" },
-                { id:"demand", name:"Demand", field:"demand" },
-                { id:"roi", name:"ROI", field:"roi" }
+                { id:"row", name:"Row #", field:"row", sortable: true },
+                { id:"text", name:"Text", field:"text", sortable: true },
+                { id:"shortDate", name:"Short Date", field:"shortDate", sortable: true },
+                { id:"time", name:"Time", field:"time", sortable: true },
+                { id:"currency", name:"Currency ($)", field:"currency", sortable: true },
+                { id:"percentage", name:"Percentage", field:"percentage", sortable: true },
+                { id:"ratio", name:"Ratio", field:"ratio", sortable: true },
+                { id:"ip", name:"IP Address", field:"ip", sortable: true }
             ],
 
             totals = {
                 row: '',
-                date: '',
-                cost: '$' + Math.round(Math.random() * 1000) + '.00',
-                revenue: '$' + Math.round(Math.random() * 100) + '.00',
-                sales: '$' + Math.round(Math.random() * 100) + '.00',
-                income: '$' + Math.round(Math.random() * 100) + '.00',
-                supply: Math.round(Math.random() * 100) + '%',
-                demand: Math.round(Math.random() * 100) + '%',
-                roi: Math.round(Math.random() * 100) + ' : 1'
+                text: '',
+                shortDate: '',
+                time: '',
+                currency: '$' + Math.round(Math.random() * 10000) + '.00',
+                percentage: Math.round(Math.random() * 100) + '%',
+                ratio: Math.ceil(Math.random() * 100) + ' : ' + Math.ceil(Math.random() * 10),
+                ip: ''
             },
 
             options = {
+                forceFitColumns: true,
                 rowHeight: 24,
                 showTotalsHeader: true,
                 showTotalsFooter: true,
@@ -62,23 +88,30 @@
     
             var data = [];
     
-            for (var i = 0; i < 1000; i++) {
+            for (var i = 0; i < 2000; i++) {
                 data[i] = {
                     row: (i + 1),
-                    date: "01/01/2010",
-                    cost: '$' + Math.round(Math.random() * 1000) + '.00',
-                    revenue: '$' + Math.round(Math.random() * 100) + '.00',
-                    sales: '$' + Math.round(Math.random() * 100) + '.00',
-                    income: '$' + Math.round(Math.random() * 100) + '.00',
-                    supply: Math.round(Math.random() * 100) + '%',
-                    demand: Math.round(Math.random() * 100) + '%',
-                    roi: Math.round(Math.random() * 100) + ' : 1'
+                    text: randomString(6),
+                    shortDate: Math.ceil(Math.random() * 12) + '/' + Math.ceil(Math.random() * 31) + '/200' + Math.ceil(Math.random() * 9),
+                    time: Math.ceil(Math.random() * 12) + ':' + zeroPad(Math.ceil((Math.random() * 60) - 1), 2) + ' ' + ampm(),
+                    currency: '$' + Math.round(Math.random() * 10000) + '.00',
+                    percentage: Math.round(Math.random() * 100) + '%',
+                    ratio: Math.ceil(Math.random() * 100) + ' : ' + Math.ceil(Math.random() * 10),
+                    ip: Math.ceil((Math.random() * 245) + 10) + '.' + Math.ceil((Math.random() * 245) + 10) + '.' + Math.ceil((Math.random() * 245) + 10) + '.' + Math.ceil((Math.random() * 245) + 10)
                 };
             }
-            
+
             grid = new Slick.Grid(element, data, columns, options, totals);
-            
+
             var columnpicker = new Slick.Controls.ColumnPicker(columns, grid);
+
+            // Detect and save sort algorithm per column
+            sortLib.detect(data, columns);
+
+            // Hook up sortLib to grid.onSort
+            grid.onSort = function(column, ascending) {
+                sortLib.onSort(data, column, ascending);
+            };
 
             // Update autosized column widths on window resize.
             $(window).resize(function() {
