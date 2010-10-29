@@ -600,6 +600,7 @@ if (!jQuery.fn.drag) {
                 containment: "parent",
                 axis: "x",
                 cursor: "default",
+                distance: 15,
                 tolerance: "intersection",
                 helper: "clone",
                 placeholder: "slick-sortable-placeholder ui-state-default slick-header-column",
