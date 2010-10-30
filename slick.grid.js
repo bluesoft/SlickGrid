@@ -31,6 +31,8 @@
  *     autoHeight               - (default false) If true, vertically resizes to fit all rows.
  *     editorLock               - (default Slick.GlobalEditorLock) A Slick.EditorLock instance to use for controlling concurrent data edits.
  *     showSecondaryHeaderRow   - (default false) If true, an extra blank (to be populated externally) row will be displayed just below the header columns.
+ *     showTotalsHeader         - (default false) If true, a totals row will be displayed above the viewport.
+ *     showTotalsFooter         - (default false) If true, a totals row will be displayed below the viewport.
  *     secondaryHeaderRowHeight - (default 25px) The height of the secondary header row.
  *     syncColumnCellResize     - (default false) Synchronously resize column cells when column headers are resized
  *     rowCssClasses            - (default null) A function which (given a row's data item as an argument) returns a space-delimited string of CSS classes that will be applied to the slick-row element. Note that this should be fast, as it is called every time a row is displayed.
@@ -61,7 +63,7 @@
  *     rerenderOnResize    - Rerender the column when it is resized (useful for columns relying on cell width or adaptive formatters).
  *     asyncPostRender     - Function responsible for manipulating the cell DOM node after it has been rendered (called in the background).
  *     behavior            - Configures the column with one of several available predefined behaviors:  "select", "move", "selectAndMove".
- *
+ *     defaultToAscending  - (default true) If false, the column sorting will default to descending.
  *
  * EVENTS:
  *     onSort                -
