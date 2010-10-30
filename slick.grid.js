@@ -1069,6 +1069,12 @@ if (!jQuery.fn.drag) {
             }
         }
 
+        function forceCurrentWidths() {
+            for (i = 0; i < columns.length; i++) {
+                columns[i].width = columns[i].currentWidth;
+            }
+        }
+
         function setSortColumn(columnId, ascending) {
             sortColumnId = columnId;
             sortAsc = ascending;
@@ -2494,6 +2500,7 @@ if (!jQuery.fn.drag) {
             "destroy":             destroy,
             "getColumnIndex":      getColumnIndex,
             "autosizeColumns":     autosizeColumns,
+            "forceCurrentWidths":  forceCurrentWidths,
             "updateCell":          updateCell,
             "updateRow":           updateRow,
             "removeRow":           removeRow,
