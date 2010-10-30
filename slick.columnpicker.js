@@ -77,7 +77,6 @@
 					grid.autosizeColumns();
 				} else {
 					grid.setOptions({forceFitColumns: false});
-					grid.forceCurrentWidths();
 				}
 				return;
 			}

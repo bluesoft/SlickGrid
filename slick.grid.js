@@ -534,7 +534,7 @@ if (!jQuery.fn.drag) {
 
                 var header = $("<div class='ui-state-default slick-header-column' id='" + uid + m.id + "' />")
                     .html("<span class='slick-column-name'>" + m.name + "</span>")
-                    .width(m.width - headerColumnWidthDiff)
+                    .width((m.currentWidth || m.width) - headerColumnWidthDiff)
                     .attr("title", m.toolTip || m.name || "")
                     .data("fieldId", m.id)
                     .appendTo($headers);
@@ -1066,12 +1066,6 @@ if (!jQuery.fn.drag) {
             $headers.children().eq(index).css("width", width - headerColumnWidthDiff);
             if (styleCells) {
                 findCssRuleForCell(index).style.width = (width - cellWidthDiff) + "px";
-            }
-        }
-
-        function forceCurrentWidths() {
-            for (i = 0; i < columns.length; i++) {
-                columns[i].width = columns[i].currentWidth;
             }
         }
 
@@ -2500,7 +2494,6 @@ if (!jQuery.fn.drag) {
             "destroy":             destroy,
             "getColumnIndex":      getColumnIndex,
             "autosizeColumns":     autosizeColumns,
-            "forceCurrentWidths":  forceCurrentWidths,
             "updateCell":          updateCell,
             "updateRow":           updateRow,
             "removeRow":           removeRow,
