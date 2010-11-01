@@ -1,5 +1,5 @@
 (function($) {
-	function SlickColumnPicker(columns,grid,options)
+	function SlickColumnPicker(grid,options)
 	{
 		var $menu;
 
@@ -23,6 +23,7 @@
 			$menu.empty();
 
             var visibleColumns = grid.getColumns();
+            var columns = grid.getAllColumns();
 			var $li, $input;
 			for (var i=0; i<columns.length; i++) {
 				$li = $("<div />").appendTo($menu);
@@ -97,6 +98,7 @@
 				}
 
                 var visibleColumns = [];
+                var columns = grid.getAllColumns();
                 $menu.find(":checkbox[id^=columnpicker]").each(function(i,e) {
                     if ($(this).is(":checked")) {
                         visibleColumns.push(columns[i]);

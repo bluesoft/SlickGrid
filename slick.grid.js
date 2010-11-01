@@ -314,6 +314,7 @@ if (!jQuery.fn.drag) {
         var highlightedCells;
         var sortColumnId;
         var sortAsc = true;
+        var allColumns = columns;
 
         // async call handles
         var h_editorLoader = null;
@@ -611,7 +612,7 @@ if (!jQuery.fn.drag) {
                 forcePlaceholderSize: true,
                 start: function(e, ui) { $(ui.helper).addClass("slick-header-column-active"); },
                 beforeStop: function(e, ui) { $(ui.helper).removeClass("slick-header-column-active"); },
-                stop: function(e) {
+                stop: function(e, ui) {
                     if (!options.editorLock.commitCurrentEdit()) {
                         $(this).sortable("cancel");
                         return;
@@ -622,6 +623,7 @@ if (!jQuery.fn.drag) {
                     for (var i=0; i<reorderedIds.length; i++) {
                         reorderedColumns.push(columns[getColumnIndex(reorderedIds[i].replace(uid,""))]);
                     }
+                    mergeReorderedColumns(reorderedColumns, ui);
                     setColumns(reorderedColumns);
 
                     if (self.onColumnsReordered) {
@@ -631,6 +633,34 @@ if (!jQuery.fn.drag) {
                     setupColumnResize();
                 }
             });
+        }
+
+        function mergeReorderedColumns(columns, ui) {
+            var moved = $('.slick-column-name', ui.item).text(),
+                prev = -1,
+                from = null,
+                to = null,
+                newColumn = null;
+            for (var i in columns) {
+                if (columns[i].name == moved) {
+                    break;
+                }
+                prev = i;
+            }
+            for (from in allColumns) {
+                if (allColumns[from].name == moved) {
+                    break;
+                }
+            }
+            for (to in allColumns) {
+                if (prev < 0 || allColumns[to].name == columns[prev].name) {
+                    newColumn = allColumns.splice(from, 1);
+                    if (from > to) to++;
+                    if (prev < 0) to = 0;
+                    allColumns.splice(to, 0, newColumn[0]);
+                    break;
+                }
+            }
         }
 
         function setupColumnResize() {
@@ -1120,6 +1150,10 @@ if (!jQuery.fn.drag) {
 
         function getColumns() {
             return columns;
+        }
+
+        function getAllColumns() {
+            return allColumns;
         }
 
         function setColumns(columnDefinitions) {
@@ -2489,6 +2523,7 @@ if (!jQuery.fn.drag) {
             // Methods
             "getColumns":          getColumns,
             "setColumns":          setColumns,
+            "getAllColumns":       getAllColumns,
             "getOptions":          getOptions,
             "setOptions":          setOptions,
             "getData":             getData,
