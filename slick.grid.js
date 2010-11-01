@@ -65,6 +65,7 @@
  *     asyncPostRender     - Function responsible for manipulating the cell DOM node after it has been rendered (called in the background).
  *     behavior            - Configures the column with one of several available predefined behaviors:  "select", "move", "selectAndMove".
  *     defaultToAscending  - (default true) If false, the column sorting will default to descending.
+ *     visible             - (default true) If false, the column will be hidden by default, to be made available in a ColumnPicker or other UI element.
  *
  * EVENTS:
  *     onSort                -
@@ -257,7 +258,8 @@ if (!jQuery.fn.drag) {
             name: "",
             resizable: true,
             sortable: false,
-            defaultToAscending: true
+            defaultToAscending: true,
+            visible: true
         };
 
         // scroller
@@ -314,7 +316,7 @@ if (!jQuery.fn.drag) {
         var highlightedCells;
         var sortColumnId;
         var sortAsc = true;
-        var allColumns = columns;
+        var allColumns = [];
 
         // async call handles
         var h_editorLoader = null;
@@ -350,6 +352,10 @@ if (!jQuery.fn.drag) {
             options = $.extend({},defaults,options);
             columnDefaults.width = options.defaultColumnWidth;
             columnDefaults.minWidth = options.defaultMinWidth;
+            for (var i in columns) {
+                columns[i] = $.extend({},columnDefaults,columns[i]);
+            }
+            allColumns = columns;
 
             // validate loaded JavaScript modules against requested options
             if (options.enableColumnReorder && !$.fn.sortable) {
@@ -413,6 +419,8 @@ if (!jQuery.fn.drag) {
             disableSelection($headers); // disable all text selection in header (including input and textarea)
             $viewport.bind("selectstart.ui", function (event) { return $(event.target).is("input,textarea"); }); // disable text selection in grid cells except in input and textarea elements (this is IE-specific, because selectstart event will only fire in IE)
 
+            removeInvisibleColumns();
+
             createColumnHeaders();
             setupColumnSort();
             setupDragEvents();
@@ -430,6 +438,16 @@ if (!jQuery.fn.drag) {
             $canvas.bind("mouseover.slickgrid", handleHover);
             $headerScroller.bind("contextmenu.slickgrid", handleHeaderContextMenu);
             $headerScroller.bind("click.slickgrid", handleHeaderClick);
+        }
+
+        function removeInvisibleColumns() {
+            var tmp = [];
+            for (var i in columns) {
+                if (columns[i].visible) {
+                    tmp.push(columns[i]);
+                }
+            }
+            columns = tmp;
         }
 
         function measureScrollbar() {
@@ -532,7 +550,7 @@ if (!jQuery.fn.drag) {
             columnsById = {};
 
             for (i = 0; i < columns.length; i++) {
-                var m = columns[i] = $.extend({},columnDefaults,columns[i]);
+                var m = columns[i];
                 columnsById[m.id] = i;
 
                 var header = $("<div class='ui-state-default slick-header-column' id='" + uid + m.id + "' />")
