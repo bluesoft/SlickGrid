@@ -653,10 +653,9 @@ if (!jQuery.fn.drag) {
                 }
             }
             for (to in allColumns) {
-                if (prev < 0 || allColumns[to].name == columns[prev].name) {
+                if (prev == -1 || allColumns[to].name == columns[prev].name) {
                     newColumn = allColumns.splice(from, 1);
-                    if (from > to) to++;
-                    if (prev < 0) to = 0;
+                    if (from > to && prev >= 0) to++;
                     allColumns.splice(to, 0, newColumn[0]);
                     break;
                 }
