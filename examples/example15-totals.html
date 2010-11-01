@@ -63,18 +63,8 @@
                 { id:"ip", name:"IP Address", field:"ip", sortable: true }
             ],
 
-            totals = {
-                row: '',
-                text: '',
-                shortDate: '',
-                time: '',
-                currency: '$' + Math.round(Math.random() * 10000) + '.00',
-                percentage: Math.round(Math.random() * 100) + '%',
-                ratio: Math.ceil(Math.random() * 100) + ' : ' + Math.ceil(Math.random() * 10),
-                ip: ''
-            },
-
             options = {
+                defaultMinWidth: 70,
                 forceFitColumns: true,
                 rowHeight: 24,
                 showTotalsHeader: true,
@@ -86,7 +76,18 @@
     
             var element = $('#slickgrid');
     
-            var data = [];
+            var data = [],
+
+                totals = {
+                    row: '',
+                    text: '',
+                    shortDate: '',
+                    time: '',
+                    currency: '$' + Math.round(Math.random() * 10000) + '.00',
+                    percentage: Math.round(Math.random() * 100) + '%',
+                    ratio: Math.ceil(Math.random() * 100) + ' : ' + Math.ceil(Math.random() * 10),
+                    ip: ''
+                };
     
             for (var i = 0; i < 2000; i++) {
                 data[i] = {

@@ -21,6 +21,7 @@
  *     enableCellNavigation     - (default true) If false, no cells will be selectable.
  *     enableCellRangeSelection - (default false) If true, user will be able to select a cell range.  onCellRangeSelected event will be fired.
  *     defaultColumnWidth       - (default 80px) Default column width in pixels (if columns[cell].width is not specified).
+ *     defaultMinWidth          - (default 30px) Default column min-width in pixels (if columns[cell].minWidth is not specified).
  *     enableColumnReorder      - (default true) Allows the user to reorder columns.
  *     asyncEditorLoading       - (default false) Makes cell editors load asynchronously after a small delay.
  *                                This greatly increases keyboard navigation speed.
@@ -222,6 +223,7 @@ if (!jQuery.fn.drag) {
         var defaults = {
             rowHeight: 25,
             defaultColumnWidth: 80,
+            defaultMinWidth: 30,
             enableAddRow: false,
             leaveSpaceForNewRows: false,
             editable: false,
@@ -255,8 +257,7 @@ if (!jQuery.fn.drag) {
             name: "",
             resizable: true,
             sortable: false,
-            defaultToAscending: true,
-            minWidth: 30
+            defaultToAscending: true
         };
 
         // scroller
@@ -347,6 +348,7 @@ if (!jQuery.fn.drag) {
             scrollbarDimensions = scrollbarDimensions || measureScrollbar(); // skip measurement if already have dimensions
             options = $.extend({},defaults,options);
             columnDefaults.width = options.defaultColumnWidth;
+            columnDefaults.minWidth = options.defaultMinWidth;
 
             // validate loaded JavaScript modules against requested options
             if (options.enableColumnReorder && !$.fn.sortable) {
