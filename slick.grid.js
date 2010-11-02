@@ -2538,6 +2538,7 @@ if (!jQuery.fn.drag) {
             "onCellRangeSelected":   null,
 
             // Methods
+            "setupColumnResize":   setupColumnResize,
             "getColumns":          getColumns,
             "setColumns":          setColumns,
             "getAllColumns":       getAllColumns,
