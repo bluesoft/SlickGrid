@@ -47,12 +47,13 @@
         var ampm = function() {
             return (Math.round(Math.random())) ? 'am' : 'pm';
         };
-        
+
         /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
         var grid,
             columnPicker,
-        
+            sortLib,
+
             columns = [
                 { id:"row", name:"Row #", field:"row", sortable: true },
                 { id:"text", name:"Text", field:"text", sortable: true },
@@ -74,9 +75,9 @@
             };
 
         $().ready(function() {
-    
+
             var element = $('#slickgrid');
-    
+
             var data = [],
 
                 totals = {
@@ -89,7 +90,7 @@
                     ratio: Math.ceil(Math.random() * 100) + ' : ' + Math.ceil(Math.random() * 10),
                     ip: ''
                 };
-    
+
             for (var i = 0; i < 2000; i++) {
                 data[i] = {
                     row: (i + 1),
@@ -105,13 +106,14 @@
 
             grid = new Slick.Grid(element, data, columns, options, totals);
             columnPicker = new Slick.Controls.ColumnPicker(grid);
+            sortLib = new Slick.SortLib();
 
             // Detect and save sort algorithm per column
             sortLib.detect(data, columns);
 
             // Hook up sortLib to grid.onSort
             grid.onSort = function(column, ascending) {
-                sortLib.onSort(data, column, ascending);
+                sortLib.onSort(grid, data, column, ascending);
             };
 
             // Update autosized column widths on window resize.
