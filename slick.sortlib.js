@@ -10,7 +10,7 @@
     function SortLib() {
 
         var by = null,
-            ascending = true,
+            asc = true,
             algorithm = null,
             ieSort = /MSIE 6/i.test(navigator.userAgent),
 
@@ -36,7 +36,7 @@
                         }
                         a = new Date(a).getTime();
                         b = new Date(b).getTime();
-                        return (ascending) ? a - b : b - a;
+                        return (asc) ? a - b : b - a;
                     }
                 },
                 // YYYY-MM-DD HH:MM:SS -HHMM
@@ -47,7 +47,7 @@
                         a = a[by], b = b[by];
                         a = new Date(a.replace(/-/g, '/').replace(/\s\//, ' -')).getTime();
                         b = new Date(b.replace(/-/g, '/').replace(/\s\//, ' -')).getTime();
-                        return (ascending) ? a - b : b - a;
+                        return (asc) ? a - b : b - a;
                     }
                 },
                 // 5-25-2010 - 12-25-2010
@@ -60,7 +60,7 @@
                         b = a.replace(/ \- .*/, '');
                         a = new Date(a.replace(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/, "$3/$1/$2")).getTime();
                         b = new Date(b.replace(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/, "$3/$1/$2")).getTime();
-                        return (ascending) ? a - b : b - a;
+                        return (asc) ? a - b : b - a;
                     }
                 },
                 // 5-25-2010 or 5/25/10
@@ -71,7 +71,7 @@
                         a = a[by], b = b[by];
                         a = new Date(a.replace(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/, "$3/$1/$2")).getTime();
                         b = new Date(b.replace(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/, "$3/$1/$2")).getTime();
-                        return (ascending) ? a - b : b - a;
+                        return (asc) ? a - b : b - a;
                     }
                 },
                 // 2010-5-25 or 2010/12/25
@@ -82,7 +82,7 @@
                         a = a[by], b = b[by];
                         a = new Date(a.replace(/-/g, '/')).getTime();
                         b = new Date(b.replace(/-/g, '/')).getTime();
-                        return (ascending) ? a - b : b - a;
+                        return (asc) ? a - b : b - a;
                     }
                 },
                 // 25:1 or 1 : 2
@@ -115,7 +115,7 @@
                                 b = parseFloat(b[0]) / parseFloat(b[1]);
                             }
                         }
-                        return (ascending) ? a - b : b - a;
+                        return (asc) ? a - b : b - a;
                     }
                 },
                 // 12:35 or 2:52 pm or 10:45 AM
@@ -126,7 +126,7 @@
                         a = a[by], b = b[by];
                         a = new Date("2000/01/01 " + a).getTime();
                         b = new Date("2000/01/01 " + b).getTime();
-                        return (ascending) ? a - b : b - a;
+                        return (asc) ? a - b : b - a;
                     }
                 },
                 // 214.200.134.146
@@ -148,7 +148,7 @@
                         }
                         a = formatFloat(a2);
                         b = formatFloat(b2);
-                        return (ascending) ? a - b : b - a;
+                        return (asc) ? a - b : b - a;
                     }
                 },
                 currency: {
@@ -159,7 +159,7 @@
                         b = b[by].replace('$', '');
                         a = formatFloat(a);
                         b = formatFloat(b);
-                        return (ascending) ? a - b : b - a;
+                        return (asc) ? a - b : b - a;
                     }
                 },
                 percent: {
@@ -170,7 +170,7 @@
                         b = b[by].replace('%', '');
                         a = formatFloat(a);
                         b = formatFloat(b);
-                        return (ascending) ? a - b : b - a;
+                        return (asc) ? a - b : b - a;
                     }
                 },
                 number: {
@@ -184,7 +184,7 @@
                             a = formatFloat(a);
                             b = formatFloat(b);
                         }
-                        return (ascending) ? a - b : b - a;
+                        return (asc) ? a - b : b - a;
                     }
                 },
                 basic: {
@@ -198,7 +198,7 @@
                         if (typeof b == 'string') {
                             b = b.toLowerCase();
                         }
-                        return (ascending) ? a > b : b < a;
+                        return (asc) ? a > b : b < a;
                     }
                 }
             },
@@ -253,10 +253,10 @@
             }
             else {
                 by = column.field;
-                ascending = ascending;
+                asc = ascending;
                 algorithm = (column.sortType) ? column.sortType : sorts.basic.cmp;
                 if (ieSort) {
-                    fastSort(data, column.field, ascending);
+                    fastSort(data, column.field, asc);
                 } else {
                     data.sort(algorithm);
                 }
