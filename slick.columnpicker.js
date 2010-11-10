@@ -114,6 +114,11 @@
         }
 
         init();
+
+        return {
+            // Methods
+            "displayContextMenu":    displayContextMenu
+        };
     }
 
     // Slick.Controls.ColumnPicker
