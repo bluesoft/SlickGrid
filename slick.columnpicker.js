@@ -66,9 +66,10 @@
                 });
             });
 
+            var leftOffset = ((e.pageX + $menu.outerWidth() + 20) > $(window).width()) ? (e.pageX + $menu.outerWidth() + 20 - $(window).width()) : 15;
             $menu
-                .css("top", e.pageY - 10)
-                .css("left", e.pageX - 10)
+                .css("top", e.pageY - 15)
+                .css("left", e.pageX - leftOffset)
                 .fadeIn(options.fadeSpeed);
         }
 
