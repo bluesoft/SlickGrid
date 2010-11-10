@@ -105,7 +105,10 @@
             }
 
             grid = new Slick.Grid(element, data, columns, options, totals);
-            columnPicker = new Slick.Controls.ColumnPicker(grid);
+            columnPicker = new Slick.Controls.ColumnPicker(grid, {
+                fadeSpeed: 150,
+                showSyncResize: false
+            });
             sortLib = new Slick.SortLib();
 
             // Detect and save sort algorithm per column

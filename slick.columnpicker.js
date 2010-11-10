@@ -5,7 +5,8 @@
         var $menu;
 
         var defaults = {
-            fadeSpeed: 250
+            fadeSpeed: 250,
+            showSyncResize: true
         };
 
         function init() {
@@ -49,11 +50,13 @@
                 $input.attr("checked", "checked");
             }
 
-            $li = $("<div />").appendTo($menu);
-            $input = $("<input type='checkbox' id='syncresize' />").appendTo($li);
-            $("<label for='syncresize'>Synchronous Resizing</label>").appendTo($li);
-            if (grid.getOptions().syncColumnCellResize) {
-                $input.attr("checked", "checked");
+            if (options.showSyncResize) {
+                $li = $("<div />").appendTo($menu);
+                $input = $("<input type='checkbox' id='syncresize' />").appendTo($li);
+                $("<label for='syncresize'>Synchronous Resizing</label>").appendTo($li);
+                if (grid.getOptions().syncColumnCellResize) {
+                    $input.attr("checked", "checked");
+                }
             }
 
             // Toggle active class
@@ -86,7 +89,7 @@
                 return;
             }
 
-            if (e.target.id == 'syncresize') {
+            if (options.showSyncResize && e.target.id == 'syncresize') {
                 if (e.target.checked) {
                     grid.setOptions({syncColumnCellResize: true});
                 }
