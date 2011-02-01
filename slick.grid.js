@@ -89,6 +89,7 @@
  *     onBeforeDestroy       -  Raised just before the grid control is destroyed (part of the destroy() method).
  *     onCurrentCellChanged  -  Raised when the selected (active) cell changed.  Args: {row:currentRow, cell:currentCell}.
  *     onCellRangeSelected   -  Raised when a user selects a range of cells.  Args: {from:{row,cell}, to:{row,cell}}.
+ *     onSetAllColumns       -
  *
  * NOTES:
  *     Cell/row DOM manipulations are done directly bypassing jQuery's DOM manipulation methods.
@@ -352,7 +353,7 @@ if (!jQuery.fn.drag) {
             options = $.extend({},defaults,options);
             columnDefaults.width = options.defaultColumnWidth;
             columnDefaults.minWidth = options.defaultMinWidth;
-            for (var i in columns) {
+            for (var i = 0; i < columns.length; i++) {
                 columns[i] = $.extend({},columnDefaults,columns[i]);
             }
             allColumns = columns;
@@ -442,8 +443,8 @@ if (!jQuery.fn.drag) {
 
         function removeInvisibleColumns() {
             var tmp = [];
-            for (var i in columns) {
-                if (columns[i].visible) {
+            for (var i = 0; i < columns.length; i++) {
+                if (columns[i].visible == true) {
                     tmp.push(columns[i]);
                 }
             }
@@ -562,7 +563,7 @@ if (!jQuery.fn.drag) {
 
                 if (totals && (options.showTotalsHeader || options.showTotalsFooter)) {
                     var total = $("<div class='ui-state-default slick-totals-column c" + i + "' />")
-                        .html("<span class='slick-totals-name'>" + totals[m.id] + "</span>");
+                        .html("<span class='slick-totals-name'>" + (totals[m.id] || '') + "</span>");
                     if (options.showTotalsHeader) {
                         $totals.append(total.clone());
                     }
@@ -654,23 +655,21 @@ if (!jQuery.fn.drag) {
         }
 
         function mergeReorderedColumns(columns, ui) {
-            var moved = $('.slick-column-name', ui.item).text(),
-                prev = -1,
-                from = null,
-                to = null,
-                newColumn = null;
-            for (var i in columns) {
+            var moved = $('.slick-column-name', ui.item).text();
+            var prev = -1;
+            var newColumn = null;
+            for (var i = 0; i < columns.length; i++) {
                 if (columns[i].name == moved) {
                     break;
                 }
                 prev = i;
             }
-            for (from in allColumns) {
+            for (var from = 0; from < allColumns.length; from++) {
                 if (allColumns[from].name == moved) {
                     break;
                 }
             }
-            for (to in allColumns) {
+            for (var to = 0; to < allColumns.length; to++) {
                 if (prev == -1 || allColumns[to].name == columns[prev].name) {
                     newColumn = allColumns.splice(from, 1);
                     if (from > to && prev >= 0) to++;
@@ -1047,6 +1046,10 @@ if (!jQuery.fn.drag) {
         //////////////////////////////////////////////////////////////////////////////////////////////
         // General
 
+        function getUID() {
+            return uid;
+        }
+
         function getEditController() {
             return editController;
         }
@@ -1171,6 +1174,13 @@ if (!jQuery.fn.drag) {
 
         function getAllColumns() {
             return allColumns;
+        }
+
+        function setAllColumns(columnDefinitions) {
+            allColumns = columnDefinitions;
+            if (self.onSetAllColumns) {
+                self.onSetAllColumns();
+            }
         }
 
         function setColumns(columnDefinitions) {
@@ -2536,12 +2546,15 @@ if (!jQuery.fn.drag) {
             "onCurrentCellChanged":  null,
             "onCurrentCellPositionChanged":  null,
             "onCellRangeSelected":   null,
+            "onSetAllColumns":       null,
 
             // Methods
+            "getUID":              getUID,
             "setupColumnResize":   setupColumnResize,
             "getColumns":          getColumns,
             "setColumns":          setColumns,
             "getAllColumns":       getAllColumns,
+            "setAllColumns":       setAllColumns,
             "getOptions":          getOptions,
             "setOptions":          setOptions,
             "getData":             getData,
