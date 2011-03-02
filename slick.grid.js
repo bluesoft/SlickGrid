@@ -1039,8 +1039,12 @@ if (!jQuery.fn.drag) {
         function destroy() {
             options.editorLock.cancelCurrentEdit();
 
-            if (self.onBeforeDestroy) { self.onBeforeDestroy(); }
-            if ($headers.sortable) { $headers.sortable("destroy"); }
+            if (self.onBeforeDestroy)
+                self.onBeforeDestroy();
+
+            if (options.enableColumnReorder && $headers.sortable) 
+                $headers.sortable("destroy");
+
             unbindAncestorScrollEvents();
             $container.unbind(".slickgrid");
             removeCssRules();
@@ -2036,28 +2040,27 @@ if (!jQuery.fn.drag) {
         }
 
         function focusOnCurrentCell() {
-            // lazily enable the cell to recieve keyboard focus
+            // lazily enable the cell to receive keyboard focus
             $(currentCellNode)
                 .attr("tabIndex",0)
                 .attr("hideFocus",true);
 
-            if ($.browser.msie && parseInt($.browser.version) < 8) {
-                // IE7 tries to scroll the viewport so that the item being focused is aligned to the left border
-                // IE-specific .setActive() sets the focus, but doesn't scroll
+            // IE7 tries to scroll the viewport so that the item being focused is aligned to the left border
+            // IE-specific .setActive() sets the focus, but doesn't scroll
+            if ($.browser.msie && parseInt($.browser.version) < 8)
                 currentCellNode.setActive();
-
-                var left = $(currentCellNode).position().left,
-                    right = left + $(currentCellNode).outerWidth(),
-                    scrollLeft = $viewport.scrollLeft(),
-                    scrollRight = scrollLeft + $viewport.width();
-
-                if (left < scrollLeft)
-                    $viewport.scrollLeft(left);
-                else if (right > scrollRight)
-                    $viewport.scrollLeft(Math.min(left, right - $viewport[0].clientWidth));
-            }
             else
                 currentCellNode.focus();
+
+            var left = $(currentCellNode).position().left,
+                right = left + $(currentCellNode).outerWidth(),
+                scrollLeft = $viewport.scrollLeft(),
+                scrollRight = scrollLeft + $viewport.width();
+
+            if (left < scrollLeft)
+                $viewport.scrollLeft(left);
+            else if (right > scrollRight)
+                $viewport.scrollLeft(Math.min(left, right - $viewport[0].clientWidth));
         }
 
         function setSelectedCell(newCell,editMode) {
