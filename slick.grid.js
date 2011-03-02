@@ -531,7 +531,6 @@ if (!jQuery.fn.drag) {
         }
 
         function createColumnHeaders() {
-            var i;
 
             function hoverBegin() {
                 $(this).addClass("ui-state-hover");
@@ -541,16 +540,9 @@ if (!jQuery.fn.drag) {
             }
 
             $headers.empty();
-            if (options.showTotalsHeader) {
-                $totals.empty();
-            }
-            if (options.showTotalsFooter) {
-                $totalsFooter.empty();
-            }
-
             columnsById = {};
 
-            for (i = 0; i < columns.length; i++) {
+            for (var i = 0; i < columns.length; i++) {
                 var m = columns[i];
                 columnsById[m.id] = i;
 
@@ -561,17 +553,6 @@ if (!jQuery.fn.drag) {
                     .data("fieldId", m.id)
                     .appendTo($headers);
 
-                if (totals && (options.showTotalsHeader || options.showTotalsFooter)) {
-                    var total = $("<div class='ui-state-default slick-totals-column c" + i + "' />")
-                        .html("<span class='slick-totals-name'>" + (totals[m.id] || '') + "</span>");
-                    if (options.showTotalsHeader) {
-                        $totals.append(total.clone());
-                    }
-                    if (options.showTotalsFooter) {
-                        $totalsFooter.append(total.clone());
-                    }
-                }
-
                 if (options.enableColumnReorder || m.sortable) {
                     header.hover(hoverBegin, hoverEnd);
                 }
@@ -581,10 +562,36 @@ if (!jQuery.fn.drag) {
                 }
             }
 
+            setTotalHeaders();
             setSortColumn(sortColumnId,sortAsc);
             setupColumnResize();
             if (options.enableColumnReorder) {
                 setupColumnReorder();
+            }
+        }
+
+        function setTotalHeaders() {
+
+            if (options.showTotalsHeader) {
+                $totals.empty();
+            }
+            if (options.showTotalsFooter) {
+                $totalsFooter.empty();
+            }
+
+            for (var i = 0; i < columns.length; i++) {
+                var c = columns[i];
+
+                if (totals && (options.showTotalsHeader || options.showTotalsFooter)) {
+                    var total = $("<div class='ui-state-default slick-totals-column c" + i + "' />")
+                        .html("<span class='slick-totals-name'>" + (totals[c.id] || '') + "</span>");
+                    if (options.showTotalsHeader) {
+                        $totals.append(total.clone());
+                    }
+                    if (options.showTotalsFooter) {
+                        $totalsFooter.append(total.clone());
+                    }
+                }
             }
         }
 
@@ -1239,6 +1246,16 @@ if (!jQuery.fn.drag) {
         function hideSecondaryHeaderRow() {
             options.showSecondaryHeaderRow = false;
             $secondaryHeaderScroller.slideUp("fast", resizeCanvas);
+        }
+
+        function getTotals() {
+            return totals;
+        }
+
+        // Overwrites the totals object and updates the totals header(s).
+        function setTotals(newTotals) {
+            totals = newTotals;
+            setTotalHeaders();
         }
 
         //////////////////////////////////////////////////////////////////////////////////////////////
@@ -2567,6 +2584,8 @@ if (!jQuery.fn.drag) {
             "removeRow":           removeRow,
             "removeRows":          removeRows,
             "removeAllRows":       removeAllRows,
+            "getTotals":           getTotals,
+            "setTotals":           setTotals,
             "render":              render,
             "invalidate":          invalidate,
             "setHighlightedCells": setHighlightedCells,
