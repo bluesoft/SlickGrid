@@ -1,4 +1,14 @@
-# SlickGrid Documentation
+# Forked SlickGrid Documentation
+
+## Features added in this fork:
+
+* **Session handling:** Refreshing the page restores column visiibility, order, and default sort.
+* **Filtering UI:** Min/max ranges are determined automatically.
+* **Rich sorting library:** Sort algorithms are determined automatically.
+* **Fixed totals rows:** Can be updated with the Grid.setTotals() method. Filters update totals automatically. Can be displayed in footer and/or header.
+* **UX improvements:** Column reordering is updated in ColumnPicker. More natural dragging algorithm/threshold used.
+
+See examples/example15-fork-feature-demo.html for a demo.
 
 ## When and Where to Load SlickGrid
 
