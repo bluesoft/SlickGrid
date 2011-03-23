@@ -20,6 +20,7 @@
         }
 
         function displayContextMenu(e) {
+            e.preventDefault();
             $menu.empty();
 
             var visibleColumns = grid.getColumns();
