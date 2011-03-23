@@ -584,7 +584,7 @@ if (!jQuery.fn.drag) {
 
                 if (totals && (options.showTotalsHeader || options.showTotalsFooter)) {
                     var total = $("<div class='ui-state-default slick-totals-column c" + i + "' />")
-                        .html("<span class='slick-totals-name'>" + (totals[c.id] || '') + "</span>");
+                        .html("<span class='slick-totals-name'>" + (totals[c.field] || '') + "</span>");
                     if (options.showTotalsHeader) {
                         $totals.append(total.clone());
                     }

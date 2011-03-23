@@ -1,23 +1,26 @@
 .slick-columnpicker {
-	border: 0;
-	cursor: default;
-	background: #fff;
-	min-width: 180px;
-	padding: 8px 10px;
-	-moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
-	-webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
-	border-radius: 5px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
+    border: 0;
+    cursor: default;
+    background: #fff;
+    width: 200px;
+    padding: 8px 10px;
+    -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
 }
 
 .slick-columnpicker div {
-	margin: 0;
-	padding: 0;
-	background: none;
+    background: none;
+    clear: both;
+    margin: 0;
+    padding: 0;
+    zoom: 1;
 }
 
 .slick-columnpicker input {
+    float: left;
     margin: 3px 4px 3px 0;
 }
 
@@ -26,7 +29,7 @@
     cursor: pointer;
     font-size: 11px;
     font-weight: normal;
-    line-height: 11px;
+    line-height: 18px;
 }
 
 .slick-columnpicker label.active {
@@ -34,19 +37,10 @@
     font-weight: bold;
 }
 
-.slick-columnpicker a {
-	display: block;
-	padding: 4px;
-	font-weight: bold;
-}
-
-.slick-columnpicker a:hover {
-	background: white;
-}
-
 .slick-columnpicker hr {
     border: 0;
     border-top: 1px solid #ddd;
+    clear: both;
     height: 1px;
     margin: 7px -9px;
     padding: 0;
