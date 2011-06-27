@@ -441,6 +441,25 @@ if (!jQuery.fn.drag) {
             $headerScroller.bind("click.slickgrid", handleHeaderClick);
         }
 
+        function addSlickLoader() {
+            // $container.animate({ opacity: 0.5 }, 150);
+            $('<div class="slick-loader">' +
+                '<div class="slick-loader-text">' +
+                    '<strong>Loading Data...</strong><br/>Please wait' +
+                '</div>' +
+            '</div>').insertAfter($container).css({
+                height: $container.height(),
+                top: $container.position().top
+            }).find('div.slick-loader-text').css({ top: ($container.height() / 2.5) });
+        }
+
+        function removeSlickLoader() {
+            // $container.animate({ opacity: 1 }, 150);
+            $('div.slick-loader').fadeOut(250, function() {
+                $(this).remove();
+            });
+        }
+        
         function removeInvisibleColumns() {
             var tmp = [];
             for (var i = 0; i < columns.length; i++) {
@@ -2628,6 +2647,8 @@ if (!jQuery.fn.drag) {
             "removeRow":           removeRow,
             "removeRows":          removeRows,
             "removeAllRows":       removeAllRows,
+            "addSlickLoader":      addSlickLoader,
+            "removeSlickLoader":   removeSlickLoader,
             "getTotals":           getTotals,
             "setTotals":           setTotals,
             "showTotals":          showTotals,
