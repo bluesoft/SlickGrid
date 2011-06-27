@@ -7,6 +7,7 @@
 
         var defaults = {
             fadeSpeed: 250,
+            showAutoResize: true,
             showSyncResize: true
         };
 
@@ -46,12 +47,17 @@
                     .appendTo($li);
             }
 
-            $("<hr/>").appendTo($menu);
-            $li = $("<div />").appendTo($menu);
-            $input = $("<input type='checkbox' id='" + uid + "_autoresize' />").appendTo($li);
-            $("<label for='" + uid + "_autoresize'>Force Fit Columns</label>").appendTo($li);
-            if (grid.getOptions().forceFitColumns) {
-                $input.attr("checked", "checked");
+            if (options.showAutoResize || options.showSyncResize) {
+                $("<hr/>").appendTo($menu);
+            }
+
+            if (options.showAutoResize) {
+                $li = $("<div />").appendTo($menu);
+                $input = $("<input type='checkbox' id='" + uid + "_autoresize' />").appendTo($li);
+                $("<label for='" + uid + "_autoresize'>Force Fit Columns</label>").appendTo($li);
+                if (grid.getOptions().forceFitColumns) {
+                    $input.attr("checked", "checked");
+                }
             }
 
             if (options.showSyncResize) {
@@ -99,7 +105,7 @@
         }
 
         function updateColumn(e) {
-            if (e.target.id == (uid + '_autoresize')) {
+            if (options.showAutoResize && e.target.id == (uid + '_autoresize')) {
                 if (e.target.checked) {
                     grid.setOptions({forceFitColumns: true});
                     grid.autosizeColumns();

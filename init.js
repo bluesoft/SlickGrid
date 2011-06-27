@@ -28,6 +28,7 @@ $(function() {
             },
             columnPicker: {
                 fadeSpeed: 150,
+                showAutoResize: false,
                 showSyncResize: false
             },
             view: {
