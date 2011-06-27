@@ -7,6 +7,7 @@
 
         var defaults = {
             fadeSpeed: 250,
+            showCloseButton: true,
             showAutoResize: true,
             showSyncResize: true
         };
@@ -30,6 +31,13 @@
             var visibleColumns = grid.getColumns();
             var columns = grid.getAllColumns();
             var $li, $input;
+
+            if (options.showCloseButton) {
+                $('<div class="close_columnpicker"></div>').appendTo($menu).click(function() {
+                    $menu.fadeOut(options.fadeSpeed);
+                });
+            }
+
             for (var i=0; i<columns.length; i++) {
                 $li = $("<div />").appendTo($menu);
 

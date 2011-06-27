@@ -522,3 +522,13 @@ div.slick-loader-text strong {
     color: #14394e;
     font-size: 13px;
 }
+
+div.slick-viewport .ui-state-active a, div.slick-viewport .ui-state-active a:link, div.slick-viewport .ui-state-active a:visited {
+    color: #2883af;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+div.slick-viewport .ui-state-active a:hover {
+    color: #174b64;
+}
