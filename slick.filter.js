@@ -348,6 +348,7 @@ function EventHelper() {
             if (currentFilter) {
                 constructFilter();
             }
+            disableInvalidColumnFilters();
         }
 
         function constructFilter() {
@@ -624,29 +625,20 @@ function EventHelper() {
             }
         }
 
-        function getItemByIndex(i) {
-            return items[i];
-        }
-
-        function getIndexById(id) {
-            return index[id];
-        }
-
-        function getItemById(id) {
-            return items[index[id]];
-        }
-
         function refreshFilterRanges() {
             var columns = Grid.getAllColumns();
             for (var i = 0; i < columns.length; i++) {
                 if (!columns[i].filter) {
                     continue;
                 }
-                var column = columns[i].id;
+                var column = columns[i].field;
                 filters[column] = (filters[column] == undefined) ? {} : filters[column];
                 filters[column].type = columns[i].filter;
-                if (filters[column].type != 'text') {
+                if (filters[column].type == 'range') {
                     filters[column].range = findColumnRange(column);
+                }
+                else {
+                    filters[column].range = null;
                 }
             }
         }
@@ -666,6 +658,20 @@ function EventHelper() {
             return range;
         }
 
+        function disableInvalidColumnFilters() {
+            var columns = Grid.getAllColumns();
+            var $options = $('option', $dom.columnSelector).removeAttr('disabled');
+            for (var i = 0; i < columns.length; i++) {
+                var column = columns[i].field;
+                if (!filters[column] || !filters[column].range) {
+                    continue;
+                }
+                if (filters[column].range.min == filters[column].range.max) {
+                    $options.eq(i + 1).attr('disabled', true);
+                }
+            }
+        }
+
         function setItems(data, objectIdProperty) {
             if (objectIdProperty !== undefined) idProperty = objectIdProperty;
             items = data;
@@ -676,6 +682,18 @@ function EventHelper() {
 
         function getItems() {
             return items;
+        }
+
+        function getItemByIndex(i) {
+            return items[i];
+        }
+
+        function getItemById(id) {
+            return items[index[id]];
+        }
+
+        function getIndexById(id) {
+            return index[id];
         }
 
         function updateItem(id, item) {
