@@ -56,7 +56,7 @@ function EventHelper() {
                 defaultToAscending: true,
                 regex: /^(January|February|March|April|May|June|July|August|September|October|November|December)(,? [0-9]{4})?$/,
                 cmp: function(a, b) {
-                    a = a[sortBy], b = b[sortBy];
+                    a = a[sortBy] + '', b = b[sortBy] + '';
                     a.replace(/[^0-9A-Za-z ]/g, '');
                     if (a.match(/[0-9]{4}/) == null) {
                         a = a.concat(' 1, 2010');
@@ -81,7 +81,7 @@ function EventHelper() {
                 defaultToAscending: true,
                 regex: /^\d{4}\-\d{2}\-\d{2}\s\d{2}:\d{2}:\d{2}\s[\-\+]\d{4}$/,
                 cmp: function(a, b) {
-                    a = a[sortBy], b = b[sortBy];
+                    a = a[sortBy] + '', b = b[sortBy] + '';
                     a = new Date(a.replace(/-/g, '/').replace(/\s\//, ' -')).getTime();
                     b = new Date(b.replace(/-/g, '/').replace(/\s\//, ' -')).getTime();
                     return (sortAsc) ? a - b : b - a;
@@ -92,7 +92,7 @@ function EventHelper() {
                 defaultToAscending: true,
                 regex: /^\d{2}\/\d{2}\/\d{4} \- \d{2}\/\d{2}\/\d{4}$/,
                 cmp: function(a, b) {
-                    a = a[sortBy], b = b[sortBy];
+                    a = a[sortBy] + '', b = b[sortBy] + '';
                     a = a.replace(/ \- .*/, '');
                     b = a.replace(/ \- .*/, '');
                     a = new Date(a.replace(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/, "$3/$1/$2")).getTime();
@@ -105,7 +105,7 @@ function EventHelper() {
                 defaultToAscending: true,
                 regex: /\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}/,
                 cmp: function(a, b) {
-                    a = a[sortBy], b = b[sortBy];
+                    a = a[sortBy] + '', b = b[sortBy] + '';
                     a = new Date(a.replace(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/, "$3/$1/$2")).getTime();
                     b = new Date(b.replace(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/, "$3/$1/$2")).getTime();
                     return (sortAsc) ? a - b : b - a;
@@ -116,7 +116,7 @@ function EventHelper() {
                 defaultToAscending: true,
                 regex: /^\d{4}[\/-]\d{1,2}[\/-]\d{1,2}$/,
                 cmp: function(a, b) {
-                    a = a[sortBy], b = b[sortBy];
+                    a = a[sortBy] + '', b = b[sortBy] + '';
                     a = new Date(a.replace(/-/g, '/')).getTime();
                     b = new Date(b.replace(/-/g, '/')).getTime();
                     return (sortAsc) ? a - b : b - a;
@@ -128,7 +128,7 @@ function EventHelper() {
                 regex: /^\d+\s?[\/:]\s?\d+$/,
                 suffix: ' : 1',
                 cmp: function(a, b) {
-                    a = a[sortBy], b = b[sortBy];
+                    a = a[sortBy] + '', b = b[sortBy] + '';
                     a = a.replace('/', ':').replace(' ', '').split(':');
                     if (a.length != 2) {
                         a = 0;
@@ -161,7 +161,7 @@ function EventHelper() {
                 defaultToAscending: true,
                 regex: /^(([0-2]?[0-9]:[0-5][0-9])|([0-1]?[0-9]:[0-5][0-9]\s(am|pm)))$/i,
                 cmp: function(a, b) {
-                    a = a[sortBy], b = b[sortBy];
+                    a = a[sortBy] + '', b = b[sortBy] + '';
                     a = new Date("2000/01/01 " + a).getTime();
                     b = new Date("2000/01/01 " + b).getTime();
                     return (sortAsc) ? a - b : b - a;
@@ -172,7 +172,7 @@ function EventHelper() {
                 defaultToAscending: true,
                 regex: /^\d{2,3}[\.]\d{2,3}[\.]\d{2,3}[\.]\d{2,3}$/,
                 cmp: function(a, b) {
-                    a = a[sortBy], b = b[sortBy];
+                    a = a[sortBy] + '', b = b[sortBy] + '';
                     var a2 = '', b2 = '', item, i, l;
                     a = a.split('.');
                     b = b.split('.');
@@ -194,8 +194,8 @@ function EventHelper() {
                 regex: /^\-?\$/,
                 prefix: '$',
                 cmp: function(a, b) {
-                    a = a[sortBy].replace('$', '');
-                    b = b[sortBy].replace('$', '');
+                    a = (a[sortBy] + '').replace('$', '');
+                    b = (b[sortBy] + '').replace('$', '');
                     a = formatFloat(a);
                     b = formatFloat(b);
                     return (sortAsc) ? a - b : b - a;
@@ -206,8 +206,8 @@ function EventHelper() {
                 regex: /%$/,
                 suffix: '%',
                 cmp: function(a, b) {
-                    a = a[sortBy].replace('%', '');
-                    b = b[sortBy].replace('%', '');
+                    a = (a[sortBy] + '').replace('%', '');
+                    b = (b[sortBy] + '').replace('%', '');
                     a = formatFloat(a);
                     b = formatFloat(b);
                     return (sortAsc) ? a - b : b - a;
@@ -219,11 +219,11 @@ function EventHelper() {
                 cmp: function(a, b) {
                     a = a[sortBy], b = b[sortBy];
                     if (typeof a == 'string') {
-                        a = a.replace(',', '');
+                        a = (a + '').replace(',', '');
                         a = formatFloat(a);
                     }
                     if (typeof b == 'string') {
-                        b = b.replace(',', '');
+                        b = (b + '').replace(',', '');
                         b = formatFloat(b);
                     }
                     return (sortAsc) ? a - b : b - a;
@@ -233,9 +233,9 @@ function EventHelper() {
                 defaultToAscending: true,
                 regex: /./,
                 cmp: function(a, b) {
-                    a = a[sortBy], b = b[sortBy];
-                    a = $.trim((a + '').toLowerCase());
-                    b = $.trim((b + '').toLowerCase());
+                    a = a[sortBy] + '', b = b[sortBy] + '';
+                    a = $.trim((a).toLowerCase());
+                    b = $.trim((b).toLowerCase());
                     return (sortAsc) ? natCaseSort(a, b) : natCaseSort(b, a);
                 }
             }
