@@ -56,7 +56,7 @@ $(function() {
         }
 
         // Init DataView, Grid, ColumnPicker
-        g.View = new Slick.Data.DataView(g.container);
+        g.View = new Slick.Data.DataView(g.container, g.options.view);
         g.Grid = new Slick.Grid(g.container, g.View.rows, g.columns, g.options.grid, g.totals);
         g.ColumnPicker = new Slick.Controls.ColumnPicker(g.Grid, g.options.columnPicker);
 
