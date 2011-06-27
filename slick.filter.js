@@ -616,6 +616,18 @@ function EventHelper() {
             }
         }
 
+        function getItemByIndex(i) {
+            return items[i];
+        }
+
+        function getIndexById(id) {
+            return index[id];
+        }
+
+        function getItemById(id) {
+            return items[index[id]];
+        }
+
         function refreshFilterRanges() {
             var columns = Grid.getAllColumns();
             for (var i = 0; i < columns.length; i++) {
@@ -651,6 +663,22 @@ function EventHelper() {
             items = data;
             refreshIndex();
             refreshFilterRanges();
+            refresh();
+        }
+
+        function getItems() {
+            return items;
+        }
+
+        function updateItem(id, item) {
+            if (index[id] === undefined || id !== item[idProperty])
+                throw "Invalid or non-matching id";
+            items[index[id]] = item;
+            refresh();
+        }
+
+        function updateCell(id, col, val) {
+            items[index[id]][col] = val;
             refresh();
         }
 
@@ -858,6 +886,7 @@ function EventHelper() {
                     items.sort(sortAlgorithm);
                 }
             }
+            refreshIndex();
             refresh();
         }
 
@@ -896,19 +925,25 @@ function EventHelper() {
 
         return {
             // Properties
-            "rows":         rows,       // note: neither the array or the data in it should be modified directly
-            "filters":      filters,
+            "rows":                 rows,       // note: neither the array or the data in it should be modified directly
+            "filters":              filters,
 
             // Methods
-            "setGrid":          setGrid,
-            "setColumnPicker":  setColumnPicker,
-            "drawControls":     drawControls,
-            "setItems":         setItems,
-            "calculateTotals":  calculateTotals,
-            "refresh":          refresh,
-            "detectSort":       detectSort,
-            "onSort":           onSort,
-            "defaultSort":      defaultSort,
+            "setGrid":              setGrid,
+            "setColumnPicker":      setColumnPicker,
+            "drawControls":         drawControls,
+            "setItems":             setItems,
+            "getItems":             getItems,
+            "getItemByIndex":       getItemByIndex,
+            "getIndexById":         getIndexById,
+            "getItemById":          getItemById,
+            "updateItem":           updateItem,
+            "updateCell":           updateCell,
+            "calculateTotals":      calculateTotals,
+            "refresh":              refresh,
+            "detectSort":           detectSort,
+            "onSort":               onSort,
+            "defaultSort":          defaultSort,
 
             // Events
             "onRowCountChanged":    onRowCountChanged,

@@ -16,14 +16,14 @@ classes should alter those!
 }
 
 .slick-row.selected {
-    background: #ffc !important;
+    /* background: #ffc !important; */
     color: #330;
     font-weight: normal;
-    z-index: 1;
+    /* z-index: 1; */
 }
 
 .slick-cell.selected {
-    border: 1px dotted #330;
+    /* border: 1px dotted #330; */
 }
 
 .slick-row.loading {
@@ -145,6 +145,7 @@ classes should alter those!
 .slick-cell {
     float: left;
     border: 1px solid transparent;
+    _border: 1px solid #fff; /* IE6 doesn't support border-color: transparent */
     border-right: 1px solid #eee;
     overflow: hidden;
     text-overflow: ellipsis;
