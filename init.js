@@ -31,6 +31,7 @@ $(function() {
                 showSyncResize: false
             },
             view: {
+                showColumnPresets: true,
                 hideTotalsOnFilter: true,
                 updateTotalsOnFilter: false
             }

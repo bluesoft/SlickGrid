@@ -3,6 +3,7 @@
     function ColumnPicker(grid, options) {
 
         var $menu;
+        var uid;
 
         var defaults = {
             fadeSpeed: 250,
@@ -11,6 +12,8 @@
 
         function init() {
             grid.onHeaderContextMenu = displayContextMenu;
+            uid = grid.getUID();
+
             options = $.extend({}, defaults, options);
 
             $menu = $("<div class='slick-columnpicker' style='display:none;position:absolute;z-index:20;' />").appendTo(document.body);
@@ -25,7 +28,6 @@
 
             var visibleColumns = grid.getColumns();
             var columns = grid.getAllColumns();
-            var uid = grid.getUID();
             var $li, $input;
             for (var i=0; i<columns.length; i++) {
                 $li = $("<div />").appendTo($menu);
@@ -78,8 +80,25 @@
                 .fadeIn(options.fadeSpeed);
         }
 
+        function useColumnPreset(preset) {
+            var visibleColumns = [];
+            var allColumns = grid.getAllColumns();
+            for (var i = 0; i < allColumns.length; i++) {
+                var c = allColumns[i];
+                // columns with special 'all' preset are always displayed
+                if ($.inArray(preset, c.presets) !== -1 || $.inArray('all', c.presets) !== -1) {
+                    allColumns[i].visible = true;
+                    visibleColumns.push(allColumns[i]);
+                }
+                else {
+                    allColumns[i].visible = false;
+                }
+            }
+            grid.setAllColumns(allColumns);
+            grid.setColumns(visibleColumns);
+        }
+
         function updateColumn(e) {
-            var uid = grid.getUID();
             if (e.target.id == (uid + '_autoresize')) {
                 if (e.target.checked) {
                     grid.setOptions({forceFitColumns: true});
@@ -103,7 +122,10 @@
             }
 
             if ($(e.target).is(":checkbox")) {
-                if ($menu.find(":checkbox:checked").length == 0) {
+
+                $('div.' + uid).prevAll('div.slickgrid-controls:first').find('a.active').removeClass('active');
+
+                if (!$menu.find(":checkbox:checked").length) {
                     $(e.target).attr("checked","checked");
                     return;
                 }
@@ -127,7 +149,8 @@
 
         return {
             // Methods
-            "displayContextMenu":    displayContextMenu
+            "displayContextMenu":       displayContextMenu,
+            "useColumnPreset":          useColumnPreset
         };
     }
 

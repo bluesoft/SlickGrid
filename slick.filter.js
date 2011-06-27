@@ -21,6 +21,7 @@ function EventHelper() {
     function DataView(container, options) {
 
         var defaults = {
+            showColumnPresets: true,
             hideTotalsOnFilter: true,
             updateTotalsOnFilter: false
         };
@@ -308,6 +309,15 @@ function EventHelper() {
                         return false;
                     })
                     .appendTo($dom.filterControls);
+                if (options.showColumnPresets) {
+                    var presets = createColumnPresets();
+                    if (presets) {
+                        $(presets).appendTo($dom.filterControls);
+                        $('a.slickgrid-column-preset').click(useColumnPreset);
+                        $('a.slickgrid-column-preset:first').addClass('last'); // float:right elements are in reverse order
+                        $('a.slickgrid-column-preset:last').addClass('active first');
+                    }
+                }
             }
             $dom.addNewFilter = $('<a href="#" class="add-new-filter slickgrid-pseudo-button">Add Filter</a>')
                 .click(function() {
@@ -323,6 +333,40 @@ function EventHelper() {
                 })
                 .appendTo($dom.filterControls);
             $dom.totalRowCount = $('<span class="total-row-count"></span>').appendTo($dom.filterControls);
+        }
+
+        function createColumnPresets() {
+            var i, j;
+            var columns = Grid.getAllColumns();
+            var presets = [];
+            for (i = 0; i < columns.length; i++) {
+                var c = columns[i];
+                c.presets = c.presets || [];
+                c.presets.push('All Columns'); //
+                if (c.visible && c.visible !== false) {
+                    c.presets.push('Default');
+                }
+                for (j = 0; j < c.presets.length; j++) {
+                    var preset = c.presets[j];
+                    if (preset != 'Default' && preset != 'All Columns' && preset != 'all') {
+                        presets = addOnce(preset, presets);
+                    }
+                }
+            }
+            presets.push('All Columns');
+            presets.unshift('Default');
+            var output = '';
+            for (i = presets.length - 1; i >= 0; i--) {
+                output += '<a href="#" class="slickgrid-column-preset slickgrid-pseudo-button" style="float:right;">' + presets[i] + '</a>';
+            }
+            return output;
+        }
+
+        function useColumnPreset() {
+            var preset = $(this).text();
+            $(this).siblings('a.active').removeClass('active').end().addClass('active');
+            ColumnPicker.useColumnPreset(preset);
+            return false;
         }
 
         function createColumnSelector() {
@@ -971,6 +1015,8 @@ function EventHelper() {
             }
         }
 
+        // Utility Functions
+
         function addCommas(n) {
             n = (n + '').split('.');
             var n1 = n[0];
@@ -980,6 +1026,13 @@ function EventHelper() {
                 n1 = n1.replace(regex, '$1' + ',' + '$2');
             }
             return n1 + n2;
+        }
+
+        function addOnce(v, a) {
+            if ($.inArray(v, a) === -1) {
+                a.push(v);
+            }
+            return a;
         }
 
         return {

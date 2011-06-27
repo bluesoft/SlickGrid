@@ -219,7 +219,7 @@ div.slick-resizable-handle {
 
 /********************************************************** Filter First Row */
 
-.slickgrid-controls, .slickgrid-controls-secondary {
+div.slickgrid-controls, div.slickgrid-controls-secondary {
     background: #aaa;
     background: -webkit-gradient(linear, left top, left bottom, from(#aaa), to(#999));
     background: -moz-linear-gradient(top, #aaa, #999);
@@ -259,6 +259,36 @@ a.slickgrid-column-picker {
     background: #ddd url(images/grid_sprites.png) no-repeat scroll right -299px;
     margin-bottom: 3px;
     padding-right: 20px;
+}
+
+div.slickgrid-controls a.active {
+    background: #222;
+    background: -webkit-gradient(linear, left top, left bottom, from(#111), to(#333));
+    background: -moz-linear-gradient(top, #111, #333);
+    border: 1px solid #111;
+    color: #fff;
+}
+
+a.slickgrid-column-preset {
+    border-radius: 0;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    margin: 0 -1px 0 0;
+}
+
+div.slickgrid-controls a.first {
+    -moz-border-radius-bottomleft: 3px;
+    -moz-border-radius-topleft: 3px;
+    -webkit-border-top-left-radius: 3px;
+    -webkit-border-bottom-left-radius: 3px;
+}
+
+div.slickgrid-controls a.last {
+    -moz-border-radius-bottomright: 3px;
+    -moz-border-radius-topright: 3px;
+    -webkit-border-top-right-radius: 3px;
+    -webkit-border-bottom-right-radius: 3px;
+    margin: 0 6px 0 0;
 }
 
 div.active-filter {

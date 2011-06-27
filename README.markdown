@@ -52,6 +52,7 @@ The dataGrids init process happens on jQuery's ready() event, which is why the f
 * cssClass            - A CSS class to add to the cell.
 * visible             - (default true) If false, the column will be hidden by default, to be made available in a ColumnPicker or other UI element.
 * filter              - Which filter method to use for filtering this column. Currently can be set to "text" or "range".
+* presets             - An array containing the human-readable column preset(s) this column is part of. "Default" and "All Columns" are implied, assuming showColumnPresets is true.
 * total               - (default 'sum') Used to determine how totals are calculated. Currently can only be set to "sum" or "average".
 * formatter           - (default 'return value || ""') Function responsible for rendering the contents of a cell. Signature: function formatter(row, cell, value, columnDef, dataContext) { ... return "..."; }
 * editor              - An Editor class.
