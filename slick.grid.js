@@ -244,6 +244,7 @@ if (!jQuery.fn.drag) {
             secondaryHeaderRowHeight: 25,
             showTotalsHeader: false,
             showTotalsFooter: false,
+            totalsScrollSpeed: 150,
             syncColumnCellResize: false,
             enableAutoTooltips: true,
             toolTipMaxLength: null,
@@ -285,6 +286,7 @@ if (!jQuery.fn.drag) {
         var $totals;
         var $totalFooterScroller;
         var $totalsFooter;
+        var totalsHeight = 0;
         var $secondaryHeaderScroller;
         var $secondaryHeaders;
         var $viewport;
@@ -387,23 +389,21 @@ if (!jQuery.fn.drag) {
             $secondaryHeaderScroller = $("<div class='slick-header-secondary ui-state-default' style='overflow:hidden;position:relative;' />").appendTo($container);
             $secondaryHeaders = $("<div class='slick-header-columns-secondary' style='width:100000px' />").appendTo($secondaryHeaderScroller);
 
-            $totalScroller = $("<div class='slick-totals ui-state-default' style='overflow:hidden;position:relative;' />").appendTo($container);
-            $totals = $("<div class='slick-totals-columns' style='width:100000px' />").appendTo($totalScroller);
+            if (options.showTotalsHeader) {
+                $totalScroller = $("<div class='slick-totals ui-state-default' style='overflow:hidden;position:relative;' />").appendTo($container);
+                $totals = $("<div class='slick-totals-columns' style='width:100000px' />").appendTo($totalScroller);
+            }
 
             $viewport = $("<div class='slick-viewport' tabIndex='0' hideFocus style='width:100%;overflow-x:auto;outline:0;position:relative;overflow-y:auto;'>").appendTo($container);
             $canvas = $("<div class='grid-canvas' tabIndex='0' hideFocus />").appendTo($viewport);
 
-            $totalFooterScroller = $("<div class='slick-totals ui-state-default' style='overflow:hidden;position:relative;' />").appendTo($container);
-            $totalsFooter = $("<div class='slick-totals-columns' style='width:100000px' />").appendTo($totalFooterScroller);
+            if (options.showTotalsFooter) {
+                $totalFooterScroller = $("<div class='slick-totals ui-state-default' style='overflow:hidden;position:relative;' />").appendTo($container);
+                $totalsFooter = $("<div class='slick-totals-columns' style='width:100000px' />").appendTo($totalFooterScroller);
+            }
 
             if (!options.showSecondaryHeaderRow) {
                 $secondaryHeaderScroller.hide();
-            }
-            if (!options.showTotalsHeader) {
-                $totalScroller.hide();
-            }
-            if (!options.showTotalsFooter) {
-                $totalFooterScroller.hide();
             }
 
             // header columns and cells may have different padding/border skewing width calculations (box-sizing, hello?)
@@ -563,6 +563,7 @@ if (!jQuery.fn.drag) {
             }
 
             setTotalHeaders();
+            setTotalHeaderHeight();
             setSortColumn(sortColumnId,sortAsc);
             setupColumnResize();
             if (options.enableColumnReorder) {
@@ -572,27 +573,66 @@ if (!jQuery.fn.drag) {
 
         function setTotalHeaders() {
 
-            if (options.showTotalsHeader) {
+            if ($totals) {
                 $totals.empty();
             }
-            if (options.showTotalsFooter) {
+            if ($totalsFooter) {
                 $totalsFooter.empty();
             }
 
             for (var i = 0; i < columns.length; i++) {
                 var c = columns[i];
 
-                if (totals && (options.showTotalsHeader || options.showTotalsFooter)) {
+                if (totals && ($totals || $totalsFooter)) {
                     var total = $("<div class='ui-state-default slick-totals-column c" + i + "' />")
                         .html("<span class='slick-totals-name'>" + (totals[c.field] || '') + "</span>");
-                    if (options.showTotalsHeader) {
+                    if ($totals) {
                         $totals.append(total.clone());
                     }
-                    if (options.showTotalsFooter) {
+                    if ($totalsFooter) {
                         $totalsFooter.append(total.clone());
                     }
                 }
             }
+        }
+
+        function setTotalHeaderHeight() {
+            if (totalsHeight == 0) {
+                totalsHeight += ($totals) ? $totals.outerHeight() : 0;
+                totalsHeight += ($totalsFooter) ? $totalsFooter.outerHeight() : 0;
+            }
+        }
+        
+        function showTotals() {
+            if ($totals) {
+                if ($totals.is(':visible')) {
+                    return;
+                }
+                $totals.slideDown(options.totalsScrollSpeed);
+            }
+            if ($totalsFooter) {
+                if ($totalsFooter.is(':visible')) {
+                    return;
+                }
+                $totalsFooter.slideDown(options.totalsScrollSpeed);
+            }
+            $viewport.animate({ height: ($viewport.height() - totalsHeight) }, options.totalsScrollSpeed);
+        }
+
+        function hideTotals() {
+            if ($totals) {
+                if ($totals.is(':hidden')) {
+                    return;
+                }
+                $totals.slideUp(options.totalsScrollSpeed);
+            }
+            if ($totalsFooter) {
+                if ($totalsFooter.is(':hidden')) {
+                    return;
+                }
+                $totalsFooter.slideUp(options.totalsScrollSpeed);
+            }
+            $viewport.animate({ height: ($viewport.height() + totalsHeight) }, options.totalsScrollSpeed);
         }
 
         function setupColumnSort() {
@@ -1442,8 +1482,8 @@ if (!jQuery.fn.drag) {
                 $container.innerHeight() -
                 $headerScroller.outerHeight() -
                 (options.showSecondaryHeaderRow ? $secondaryHeaderScroller.outerHeight() : 0) -
-                (options.showTotalsHeader ? $totalScroller.outerHeight() : 0) -
-                (options.showTotalsFooter ? $totalFooterScroller.outerHeight() : 0));
+                ($totalScroller ? $totalScroller.outerHeight() : 0) -
+                ($totalFooterScroller ? $totalFooterScroller.outerHeight() : 0));
         }
 
         function resizeCanvas() {
@@ -2589,6 +2629,8 @@ if (!jQuery.fn.drag) {
             "removeAllRows":       removeAllRows,
             "getTotals":           getTotals,
             "setTotals":           setTotals,
+            "showTotals":          showTotals,
+            "hideTotals":          hideTotals,
             "render":              render,
             "invalidate":          invalidate,
             "setHighlightedCells": setHighlightedCells,

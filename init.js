@@ -29,6 +29,10 @@ $(function() {
             columnPicker: {
                 fadeSpeed: 150,
                 showSyncResize: false
+            },
+            view: {
+                hideTotalsOnFilter: true,
+                updateTotalsOnFilter: false
             }
         };
 
@@ -65,7 +69,9 @@ $(function() {
             if (sessionIsActive) {
                 g.Session.saveColumns();
             }
-            g.View.calculateTotals();
+            if (g.options.view.updateTotalsOnFilter) {
+                g.View.calculateTotals();
+            }
         }
 
         g.View.setGrid(g.Grid);

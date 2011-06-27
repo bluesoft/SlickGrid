@@ -18,7 +18,13 @@ function EventHelper() {
 }
 
 (function($) {
-    function DataView(container) {
+    function DataView(container, options) {
+
+        var defaults = {
+            hideTotalsOnFilter: true,
+            updateTotalsOnFilter: false
+        };
+        options = $.extend({}, defaults, options);
 
         var Grid = null;            // Grid instance
         var ColumnPicker = null;    // ColumnPicker instance
@@ -275,7 +281,9 @@ function EventHelper() {
                     $dom.totalRowCount.text('Displaying ' + args.current + ' rows');
                 }
                 Grid.render();
-                calculateTotals();
+                if (options.updateTotalsOnFilter) {
+                    calculateTotals();
+                }
             });
             onRowsChanged.subscribe(function(rows) {
                 Grid.removeRows(rows);
@@ -780,6 +788,28 @@ function EventHelper() {
             Grid.setTotals(totals);
         }
 
+        function isFilteredView() {
+            var columns = Grid.getAllColumns();
+            for (var i = 0; i < columns.length; i++) {
+                if (!columns[i].filter) continue;
+                var column = columns[i].id;
+                if (filters[column].v) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function setTotalsVisibility() {
+            if (options.hideTotalsOnFilter) {
+                if (isFilteredView()) {
+                    Grid.hideTotals();
+                } else {
+                    Grid.showTotals();
+                }
+            }
+        }
+
         function recalc(_items, _rows) {
             var diff = [];
             var items = _items, rows = _rows; // cache as local vars
@@ -788,6 +818,8 @@ function EventHelper() {
                 currentRow = 0,
                 item,
                 id;
+
+            setTotalsVisibility();
 
             for (var i = 0, z = items.length; i < z; i++) {
                 item = items[i];
