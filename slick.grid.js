@@ -604,7 +604,7 @@ if (!jQuery.fn.drag) {
 
                 if (totals && ($totals || $totalsFooter)) {
                     var total = $("<div class='ui-state-default slick-totals-column c" + i + "' />")
-                            .addClass(c.cssClass | '')
+                            .addClass(c.cssClass || '')
                             .html(totals[c.field] || '');
                     if ($totals) {
                         $totals.append(total.clone());
