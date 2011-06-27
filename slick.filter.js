@@ -366,6 +366,7 @@ function EventHelper() {
             var preset = $(this).text();
             $(this).siblings('a.active').removeClass('active').end().addClass('active');
             ColumnPicker.useColumnPreset(preset);
+            setTimeout(Grid.resizeGrid, 50);
             return false;
         }
 

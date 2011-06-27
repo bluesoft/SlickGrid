@@ -771,7 +771,7 @@ if (!jQuery.fn.drag) {
                         if (options.forceFitColumns) {
                             shrinkLeewayOnRight = 0;
                             stretchLeewayOnRight = 0;
-                            // colums on right affect maxPageX/minPageX
+                            // columns on right affect maxPageX/minPageX
                             for (j = i + 1; j < columnElements.length; j++) {
                                 c = columns[j];
                                 if (c.resizable) {
@@ -1184,12 +1184,43 @@ if (!jQuery.fn.drag) {
             resizeCanvas();
         }
 
+        function resizeGrid() {
+            if (calculateTotalMinWidth() > getViewportWidth()) {
+                options.forceFitColumns = false;
+                setAllColumnsToMinWidth();
+                refreshCanvasWidth();
+            }
+            else if (options.originalForceFitColumns) {
+                options.forceFitColumns = true;
+            }
+            if (options.forceFitColumns) {
+                autosizeColumns();
+            }
+        }
+
         function styleColumnWidth(index,width,styleCells) {
             columns[index].currentWidth = width;
             $headers.children().eq(index).css("width", width - headerColumnWidthDiff);
             if (styleCells) {
                 findCssRuleForCell(index).style.width = (width - cellWidthDiff) + "px";
             }
+        }
+
+        function setAllColumnsToMinWidth() {
+            for (var i = 0; i < columns.length; i++) {
+                styleColumnWidth(i, columns[i].minWidth, true);
+            }
+        }
+
+        function calculateTotalMinWidth() {
+            var totalMinWidth = 0;
+            for (var i = 0; i < allColumns.length; i++) {
+                var c = allColumns[i];
+                if (c.visible === true && c.minWidth) {
+                    totalMinWidth += c.minWidth;
+                }
+            }
+            return totalMinWidth;
         }
 
         function setSortColumn(columnId, ascending) {
@@ -1519,14 +1550,18 @@ if (!jQuery.fn.drag) {
             viewportH = $viewport.innerHeight();
             numVisibleRows = Math.ceil(viewportH / options.rowHeight);
 
+            refreshCanvasWidth();
+
+            updateRowCount();
+            render();
+        }
+
+        function refreshCanvasWidth() {
             var totalWidth = 0;
             $headers.find(".slick-header-column").each(function() {
                 totalWidth += $(this).outerWidth();
             });
             setCanvasWidth(totalWidth);
-
-            updateRowCount();
-            render();
         }
 
         function resizeAndRender() {
@@ -1596,6 +1631,10 @@ if (!jQuery.fn.drag) {
                 top: Math.floor((scrollTop+offset)/options.rowHeight),
                 bottom: Math.ceil((scrollTop+offset+viewportH)/options.rowHeight)
             };
+        }
+
+        function getViewportWidth() {
+            return $viewport.innerWidth();
         }
 
         function getRenderedRange(viewportTop) {
@@ -1704,8 +1743,12 @@ if (!jQuery.fn.drag) {
                 prevScrollLeft = scrollLeft;
                 $headerScroller[0].scrollLeft = scrollLeft;
                 $secondaryHeaderScroller[0].scrollLeft = scrollLeft;
-                $totalScroller[0].scrollLeft = scrollLeft;
-                $totalFooterScroller[0].scrollLeft = scrollLeft;
+                if ($totalScroller) {
+                    $totalScroller[0].scrollLeft = scrollLeft;
+                }
+                if ($totalFooterScroller) {
+                    $totalFooterScroller[0].scrollLeft = scrollLeft;
+                }
             }
 
             if (!scrollDist) return;
@@ -2602,90 +2645,92 @@ if (!jQuery.fn.drag) {
         // Public API
 
         $.extend(this, {
-            "slickGridVersion": "1.4.3",
+            "slickGridVersion":             "1.4.3",
 
             // Events
-            "onSort":                null,
-            "onHeaderContextMenu":   null,
-            "onClick":               null,
-            "onDblClick":            null,
-            "onContextMenu":         null,
-            "onKeyDown":             null,
-            "onAddNewRow":           null,
-            "onValidationError":     null,
-            "onViewportChanged":     null,
-            "onSelectedRowsChanged": null,
-            "onColumnsReordered":    null,
-            "onColumnsResized":      null,
-            "onBeforeMoveRows":      null,
-            "onMoveRows":            null,
-            "onCellChange":          null,
-            "onBeforeEditCell":      null,
+            "onSort":                       null,
+            "onHeaderContextMenu":          null,
+            "onClick":                      null,
+            "onDblClick":                   null,
+            "onContextMenu":                null,
+            "onKeyDown":                    null,
+            "onAddNewRow":                  null,
+            "onValidationError":            null,
+            "onViewportChanged":            null,
+            "onSelectedRowsChanged":        null,
+            "onColumnsReordered":           null,
+            "onColumnsResized":             null,
+            "onBeforeMoveRows":             null,
+            "onMoveRows":                   null,
+            "onCellChange":                 null,
+            "onBeforeEditCell":             null,
             "onBeforeCellEditorDestroy":    null,
-            "onBeforeDestroy":       null,
-            "onCurrentCellChanged":  null,
-            "onCurrentCellPositionChanged":  null,
-            "onCellRangeSelected":   null,
-            "onSetAllColumns":       null,
+            "onBeforeDestroy":              null,
+            "onCurrentCellChanged":         null,
+            "onCurrentCellPositionChanged": null,
+            "onCellRangeSelected":          null,
+            "onSetAllColumns":              null,
 
             // Methods
-            "getUID":              getUID,
-            "setupColumnResize":   setupColumnResize,
-            "getColumns":          getColumns,
-            "setColumns":          setColumns,
-            "getAllColumns":       getAllColumns,
-            "setAllColumns":       setAllColumns,
-            "getOptions":          getOptions,
-            "setOptions":          setOptions,
-            "getData":             getData,
-            "setData":             setData,
-            "destroy":             destroy,
-            "getColumnIndex":      getColumnIndex,
-            "autosizeColumns":     autosizeColumns,
-            "updateCell":          updateCell,
-            "updateRow":           updateRow,
-            "removeRow":           removeRow,
-            "removeRows":          removeRows,
-            "removeAllRows":       removeAllRows,
-            "addSlickLoader":      addSlickLoader,
-            "removeSlickLoader":   removeSlickLoader,
-            "getTotals":           getTotals,
-            "setTotals":           setTotals,
-            "showTotals":          showTotals,
-            "hideTotals":          hideTotals,
-            "render":              render,
-            "invalidate":          invalidate,
-            "setHighlightedCells": setHighlightedCells,
-            "flashCell":           flashCell,
-            "getViewport":         getVisibleRange,
-            "resizeCanvas":        resizeCanvas,
-            "updateRowCount":      updateRowCount,
-            "getCellFromPoint":    getCellFromPoint,
-            "getCellFromEvent":    getCellFromEvent,
-            "getCurrentCell":      getCurrentCell,
-            "getCurrentCellNode":  getCurrentCellNode,
-            "resetCurrentCell":    resetCurrentCell,
-            "navigatePrev":        navigatePrev,
-            "navigateNext":        navigateNext,
-            "navigateUp":          navigateUp,
-            "navigateDown":        navigateDown,
-            "navigateLeft":        navigateLeft,
-            "navigateRight":       navigateRight,
-            "gotoCell":            gotoCell,
-            "editCurrentCell":     makeSelectedCellEditable,
-            "getCellEditor":       getCellEditor,
-            "scrollRowIntoView":   scrollRowIntoView,
-            "getSelectedRows":     getSelectedRows,
-            "setSelectedRows":     setSelectedRows,
-            "getSecondaryHeaderRow":    getSecondaryHeaderRow,
-            "showSecondaryHeaderRow":   showSecondaryHeaderRow,
-            "hideSecondaryHeaderRow":   hideSecondaryHeaderRow,
-            "setSortColumn":       setSortColumn,
-            "getCurrentCellPosition" : getCurrentCellPosition,
-            "getGridPosition": getGridPosition,
+            "getUID":                       getUID,
+            "setupColumnResize":            setupColumnResize,
+            "resizeGrid":                   resizeGrid,
+            "getColumns":                   getColumns,
+            "setColumns":                   setColumns,
+            "getAllColumns":                getAllColumns,
+            "setAllColumns":                setAllColumns,
+            "getOptions":                   getOptions,
+            "setOptions":                   setOptions,
+            "getData":                      getData,
+            "setData":                      setData,
+            "destroy":                      destroy,
+            "getColumnIndex":               getColumnIndex,
+            "autosizeColumns":              autosizeColumns,
+            "updateCell":                   updateCell,
+            "updateRow":                    updateRow,
+            "removeRow":                    removeRow,
+            "removeRows":                   removeRows,
+            "removeAllRows":                removeAllRows,
+            "addSlickLoader":               addSlickLoader,
+            "removeSlickLoader":            removeSlickLoader,
+            "getTotals":                    getTotals,
+            "setTotals":                    setTotals,
+            "showTotals":                   showTotals,
+            "hideTotals":                   hideTotals,
+            "render":                       render,
+            "invalidate":                   invalidate,
+            "setHighlightedCells":          setHighlightedCells,
+            "flashCell":                    flashCell,
+            "getViewport":                  getVisibleRange,
+            "getViewportWidth":             getViewportWidth,
+            "resizeCanvas":                 resizeCanvas,
+            "updateRowCount":               updateRowCount,
+            "getCellFromPoint":             getCellFromPoint,
+            "getCellFromEvent":             getCellFromEvent,
+            "getCurrentCell":               getCurrentCell,
+            "getCurrentCellNode":           getCurrentCellNode,
+            "resetCurrentCell":             resetCurrentCell,
+            "navigatePrev":                 navigatePrev,
+            "navigateNext":                 navigateNext,
+            "navigateUp":                   navigateUp,
+            "navigateDown":                 navigateDown,
+            "navigateLeft":                 navigateLeft,
+            "navigateRight":                navigateRight,
+            "gotoCell":                     gotoCell,
+            "editCurrentCell":              makeSelectedCellEditable,
+            "getCellEditor":                getCellEditor,
+            "scrollRowIntoView":            scrollRowIntoView,
+            "getSelectedRows":              getSelectedRows,
+            "setSelectedRows":              setSelectedRows,
+            "getSecondaryHeaderRow":        getSecondaryHeaderRow,
+            "showSecondaryHeaderRow":       showSecondaryHeaderRow,
+            "hideSecondaryHeaderRow":       hideSecondaryHeaderRow,
+            "setSortColumn":                setSortColumn,
+            "getCurrentCellPosition" :      getCurrentCellPosition,
+            "getGridPosition":              getGridPosition,
 
             // IEditor implementation
-            "getEditController":    getEditController
+            "getEditController":            getEditController
         });
     }
 

@@ -46,6 +46,7 @@ $(function() {
         }
 
         g.options = $.extend(true, {}, defaults, g.options);
+        g.options.grid.originalForceFitColumns = g.options.grid.forceFitColumns;
         g.container = $(g.container);
 
         var sessionIsActive = g.options.session;
@@ -89,12 +90,25 @@ $(function() {
             g.View.setItems(g.data);
         }
 
+        var throttle;
+        var latestTimestamp;
+        var throttleThreshold = 500;
+        var resizeTimeout;
         // Update autosized column widths on window resize.
         $(window).resize(function() {
-            if (g.Grid.getOptions().forceFitColumns) {
-                g.Grid.autosizeColumns();
+            latestTimestamp = new Date().getTime();
+            throttle = throttle || latestTimestamp;
+            clearTimeout(resizeTimeout);
+            if (throttle > latestTimestamp - throttleThreshold) {
+                resizeTimeout = setTimeout(g.Grid.resizeGrid, throttleThreshold + 100);
+                return true;
             }
+            throttle = latestTimestamp;
+            g.Grid.resizeGrid();
         });
+
+        setTimeout(g.Grid.resizeGrid, 100);
+
     }
 
     for (var i = 0; i < dataGrids.length; i++) {

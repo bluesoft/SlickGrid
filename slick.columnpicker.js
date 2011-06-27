@@ -142,6 +142,7 @@
                 });
                 grid.setAllColumns(allColumns);
                 grid.setColumns(visibleColumns);
+                setTimeout(grid.resizeGrid, 50);
             }
         }
 
