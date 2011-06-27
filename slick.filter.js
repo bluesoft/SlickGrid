@@ -58,6 +58,12 @@ function EventHelper() {
                 regex: /^(January|February|March|April|May|June|July|August|September|October|November|December)(,? [0-9]{4})?$/,
                 cmp: function(a, b) {
                     a = a[sortBy] + '', b = b[sortBy] + '';
+                    if (a.length && !b.length) {
+                        return (sortAsc) ? 1 : -1;
+                    }
+                    if (!a.length && b.length) {
+                        return (sortAsc) ? -1 : 1;
+                    }
                     a.replace(/[^0-9A-Za-z ]/g, '');
                     if (a.match(/[0-9]{4}/) == null) {
                         a = a.concat(' 1, 2010');
@@ -83,6 +89,12 @@ function EventHelper() {
                 regex: /^\d{4}\-\d{2}\-\d{2}\s\d{2}:\d{2}:\d{2}\s[\-\+]\d{4}$/,
                 cmp: function(a, b) {
                     a = a[sortBy] + '', b = b[sortBy] + '';
+                    if (a.length && !b.length) {
+                        return (sortAsc) ? 1 : -1;
+                    }
+                    if (!a.length && b.length) {
+                        return (sortAsc) ? -1 : 1;
+                    }
                     a = new Date(a.replace(/-/g, '/').replace(/\s\//, ' -')).getTime();
                     b = new Date(b.replace(/-/g, '/').replace(/\s\//, ' -')).getTime();
                     return (sortAsc) ? a - b : b - a;
@@ -94,6 +106,12 @@ function EventHelper() {
                 regex: /^\d{2}\/\d{2}\/\d{4} \- \d{2}\/\d{2}\/\d{4}$/,
                 cmp: function(a, b) {
                     a = a[sortBy] + '', b = b[sortBy] + '';
+                    if (a.length && !b.length) {
+                        return (sortAsc) ? 1 : -1;
+                    }
+                    if (!a.length && b.length) {
+                        return (sortAsc) ? -1 : 1;
+                    }
                     a = a.replace(/ \- .*/, '');
                     b = a.replace(/ \- .*/, '');
                     a = new Date(a.replace(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/, "$3/$1/$2")).getTime();
@@ -107,6 +125,12 @@ function EventHelper() {
                 regex: /\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}/,
                 cmp: function(a, b) {
                     a = a[sortBy] + '', b = b[sortBy] + '';
+                    if (a.length && !b.length) {
+                        return (sortAsc) ? 1 : -1;
+                    }
+                    if (!a.length && b.length) {
+                        return (sortAsc) ? -1 : 1;
+                    }
                     a = new Date(a.replace(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/, "$3/$1/$2")).getTime();
                     b = new Date(b.replace(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/, "$3/$1/$2")).getTime();
                     return (sortAsc) ? a - b : b - a;
@@ -118,6 +142,12 @@ function EventHelper() {
                 regex: /^\d{4}[\/-]\d{1,2}[\/-]\d{1,2}$/,
                 cmp: function(a, b) {
                     a = a[sortBy] + '', b = b[sortBy] + '';
+                    if (a.length && !b.length) {
+                        return (sortAsc) ? 1 : -1;
+                    }
+                    if (!a.length && b.length) {
+                        return (sortAsc) ? -1 : 1;
+                    }
                     a = new Date(a.replace(/-/g, '/')).getTime();
                     b = new Date(b.replace(/-/g, '/')).getTime();
                     return (sortAsc) ? a - b : b - a;
@@ -963,7 +993,7 @@ function EventHelper() {
                             break;
                         }
                         var cell = items[item][f] + ''; // concat is faster than .toString()
-                        if (!cell.length) {
+                        if (!cell.length || cell == ' ') {
                             continue;
                         }
                         for (var sort in sortLib) {
