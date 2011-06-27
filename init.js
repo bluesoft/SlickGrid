@@ -91,6 +91,7 @@ $(function() {
         g.View.drawControls();
         if (g.data.length) {
             g.View.setItems(g.data);
+            g.View.applyDefaultFilters();
         }
 
         var throttle;
@@ -129,7 +130,6 @@ $(function() {
                 g.Grid.setOptions(options);
             }
         }
-
     }
 
     for (var i = 0; i < dataGrids.length; i++) {

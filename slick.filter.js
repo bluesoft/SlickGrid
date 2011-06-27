@@ -710,6 +710,27 @@ function EventHelper() {
             ui.insertBefore($dom.totalRowCount);
         }
 
+        function applyDefaultFilters() {
+            if (options.defaultFilters) {
+                for (var defaultFilter in options.defaultFilters) {
+                    var filter = filters[defaultFilter];
+                    var defaults = {};
+                    var v = options.defaultFilters[defaultFilter];
+
+                    if (filter.type == 'range') {
+                        defaults = { min: filter.range.min, max: filter.range.max };
+                    }
+                    else {
+                        defaults = { type: 'has', text: '' };
+                        v.text = (v2.text + '').toLowerCase();
+                    }
+                    filters[defaultFilter].v = $.extend({}, defaults, v);
+                    saveFilter(defaultFilter);
+                }
+                delayedRefresh();
+            }
+        }
+
         function delayedRefresh() {
             window.clearTimeout(filterTimeout);
             filterTimeout = window.setTimeout(refresh, 10);
@@ -1123,6 +1144,7 @@ function EventHelper() {
             "calculateTotals":      calculateTotals,
             "refresh":              refresh,
             "onSort":               onSort,
+            "applyDefaultFilters":  applyDefaultFilters,
 
             // Events
             "onRowCountChanged":    onRowCountChanged,
