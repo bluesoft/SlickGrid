@@ -297,6 +297,7 @@ if (!jQuery.fn.drag) {
         var viewportHasHScroll;
         var headerColumnWidthDiff, headerColumnHeightDiff, cellWidthDiff, cellHeightDiff;  // padding+border
         var absoluteColumnMinWidth;
+        var hasScrollbarOffset = false;
 
         var currentRow, currentCell;
         var currentCellNode = null;
@@ -1186,15 +1187,33 @@ if (!jQuery.fn.drag) {
 
         function resizeGrid() {
             if (calculateTotalMinWidth() > getViewportWidth()) {
+                addScrollbarHeightToContainer();
                 options.forceFitColumns = false;
                 setAllColumnsToMinWidth();
                 refreshCanvasWidth();
             }
             else if (options.originalForceFitColumns) {
+                removeScrollbarHeightFromContainer();
                 options.forceFitColumns = true;
             }
             if (options.forceFitColumns) {
                 autosizeColumns();
+            }
+        }
+
+        function addScrollbarHeightToContainer() {
+            if (options.autoContainerHeight && !hasScrollbarOffset) {
+                hasScrollbarOffset = true;
+                $container.height($container.height() + scrollbarDimensions.height);
+                resizeCanvas();
+            }
+        }
+
+        function removeScrollbarHeightFromContainer() {
+            if (options.autoContainerHeight && hasScrollbarOffset) {
+                hasScrollbarOffset = false;
+                $container.height($container.height() - scrollbarDimensions.height);
+                resizeCanvas();
             }
         }
 

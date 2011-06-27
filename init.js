@@ -24,7 +24,8 @@ $(function() {
                 rowHeight: 21,
                 showTotalsHeader: true,
                 showTotalsFooter: true,
-                syncColumnCellResize: true
+                syncColumnCellResize: true,
+                autoContainerHeight: false
             },
             columnPicker: {
                 fadeSpeed: 150,
@@ -46,6 +47,7 @@ $(function() {
             g.columns[i].sortable = (typeof g.columns[i].sortable == 'boolean') ? g.columns[i].sortable : true;
         }
 
+        // Merge options and defaults
         g.options = $.extend(true, {}, defaults, g.options);
         g.options.grid.originalForceFitColumns = g.options.grid.forceFitColumns;
         g.container = $(g.container);
@@ -109,6 +111,24 @@ $(function() {
         });
 
         setTimeout(g.Grid.resizeGrid, 100);
+
+        if (g.data.length && g.options.grid.autoContainerHeight) {
+            var offset = 0;
+
+            $('div.slick-header, div.slick-totals').each(function() {
+                offset += $(this).height();
+            });
+            var autoHeight = (g.options.grid.rowHeight * g.data.length) + offset;
+
+            if (autoHeight < g.container.height()) {
+                g.container.height(autoHeight);
+                g.Grid.resizeGrid();
+            } else {
+                var options = g.Grid.getOptions();
+                options.autoContainerHeight = false;
+                g.Grid.setOptions(options);
+            }
+        }
 
     }
 
