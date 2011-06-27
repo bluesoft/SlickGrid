@@ -391,7 +391,7 @@ if (!jQuery.fn.drag) {
             $secondaryHeaders = $("<div class='slick-header-columns-secondary' style='width:100000px' />").appendTo($secondaryHeaderScroller);
 
             if (options.showTotalsHeader) {
-                $totalScroller = $("<div class='slick-totals ui-state-default' style='overflow:hidden;position:relative;' />").appendTo($container);
+                $totalScroller = $("<div class='slick-totals slick-totals-header ui-state-default' style='overflow:hidden;position:relative;' />").appendTo($container);
                 $totals = $("<div class='slick-totals-columns' style='width:100000px' />").appendTo($totalScroller);
             }
 
@@ -399,7 +399,7 @@ if (!jQuery.fn.drag) {
             $canvas = $("<div class='grid-canvas' tabIndex='0' hideFocus />").appendTo($viewport);
 
             if (options.showTotalsFooter) {
-                $totalFooterScroller = $("<div class='slick-totals ui-state-default' style='overflow:hidden;position:relative;' />").appendTo($container);
+                $totalFooterScroller = $("<div class='slick-totals slick-totals-footer ui-state-default' style='overflow:hidden;position:relative;' />").appendTo($container);
                 $totalsFooter = $("<div class='slick-totals-columns' style='width:100000px' />").appendTo($totalFooterScroller);
             }
 

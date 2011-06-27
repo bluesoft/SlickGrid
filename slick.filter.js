@@ -692,7 +692,7 @@ function EventHelper() {
                 }
             }
             $($dom.filterControls[0]).find('div.filter_' + id).remove();
-            var ui = $('<div><a href="#">' + info + '</a><span></span></div>');
+            var ui = $('<div><a href="#">' + info + '</a><span id="slick_remove_filter_' + id + '"></span></div>');
             ui.addClass('active-filter filter_' + id);
             $('span', ui).click(function() {
                 deleteFilter(id);
