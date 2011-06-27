@@ -34,6 +34,7 @@ function EventHelper() {
         var items = [];	                // data by index
         var rows = [];                  // data by row
         var index = {};                 // indexes by id
+        var totalCount = 0;             // total row count, defined server-side
 
         var filters = {};               // all filter data
         var currentFilter = null;       // the filter being edited currently
@@ -278,10 +279,10 @@ function EventHelper() {
 
         function setGrid(target) {
             Grid = target;
-            onRowCountChanged.subscribe(function(args) {
+            onRowCountChanged.subscribe(function(rows) {
                 Grid.updateRowCount();
                 if ($dom.totalRowCount) {
-                    $dom.totalRowCount.text('Displaying ' + args.current + ' rows');
+                    updateTotalRowCount(rows);
                 }
                 Grid.render();
                 if (options.updateTotalsOnFilter) {
@@ -296,6 +297,10 @@ function EventHelper() {
 
         function setColumnPicker(target) {
             ColumnPicker = target;
+        }
+
+        function setTotalCount(total) {
+            totalCount = total;
         }
 
         function drawControls() {
@@ -333,6 +338,14 @@ function EventHelper() {
                 })
                 .appendTo($dom.filterControls);
             $dom.totalRowCount = $('<span class="total-row-count"></span>').appendTo($dom.filterControls);
+        }
+
+        function updateTotalRowCount(rows) {
+            if (totalCount > 0 && totalCount > rows) {
+                $dom.totalRowCount.html('Displaying ' + rows + ' of ' + totalCount + ' rows');
+            } else {
+                $dom.totalRowCount.html('Displaying ' + rows + ' rows');
+            }
         }
 
         function createColumnPresets() {
@@ -921,7 +934,7 @@ function EventHelper() {
             var diff = recalc(items, rows); // pass as direct refs to avoid closure perf hit
 
             if (diff.length) onRowsChanged.notify(diff);
-            if (countBefore != rows.length) onRowCountChanged.notify({ previous: countBefore, current: rows.length });
+            if (countBefore != rows.length) onRowCountChanged.notify(rows.length);
         }
 
         /* Sorting functions */
@@ -1045,6 +1058,8 @@ function EventHelper() {
             "setGrid":              setGrid,
             "setColumnPicker":      setColumnPicker,
             "drawControls":         drawControls,
+            "updateTotalRowCount":  updateTotalRowCount,
+            "setTotalCount":        setTotalCount,
             "setItems":             setItems,
             "getItems":             getItems,
             "getItemByIndex":       getItemByIndex,
