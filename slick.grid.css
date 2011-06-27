@@ -32,7 +32,7 @@ classes should alter those!
 }
 
 .grid-canvas .odd {
-    background: #f5f8fc;
+    background: #f2f3f5;
 }
 
 .slickgrid {
@@ -146,7 +146,7 @@ classes should alter those!
     float: left;
     border: 1px solid transparent;
     _border: 1px solid #fff; /* IE6 doesn't support border-color: transparent */
-    border-right: 1px solid #eee;
+    border-right: 1px solid #d8d8d8;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -524,11 +524,11 @@ div.slick-loader-text strong {
 }
 
 div.slick-viewport .ui-state-active a, div.slick-viewport .ui-state-active a:link, div.slick-viewport .ui-state-active a:visited {
-    color: #2883af;
+    color: #287cb0;
     font-weight: bold;
     text-decoration: underline;
 }
 
 div.slick-viewport .ui-state-active a:hover {
-    color: #174b64;
+    color: #093a59;
 }

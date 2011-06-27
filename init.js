@@ -115,7 +115,7 @@ $(function() {
         if (g.data.length && g.options.grid.autoContainerHeight) {
             var offset = 0;
 
-            $('div.slick-header, div.slick-totals').each(function() {
+            $('div.slick-header, div.slick-totals', g.container).each(function() {
                 offset += $(this).height();
             });
             var autoHeight = (g.options.grid.rowHeight * g.data.length) + offset;
