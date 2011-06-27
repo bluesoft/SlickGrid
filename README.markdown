@@ -48,6 +48,7 @@ The dataGrids init process happens on jQuery's ready() event, which is why the f
 * minWidth            - Minimum allowed column width for resizing.
 * maxWidth            - Maximum allowed column width for resizing.
 * sortable            - (default false) If true, the column can be sorted (onSort will be called).
+* forceSortType       - Override automatic sort detection to use a particular sort type.
 * resizable           - (default true) If false, the column cannot be resized. Should be used sparingly.
 * cssClass            - A CSS class to add to the cell.
 * visible             - (default true) If false, the column will be hidden by default, to be made available in a ColumnPicker or other UI element.

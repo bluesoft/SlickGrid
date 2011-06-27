@@ -992,6 +992,9 @@ function EventHelper() {
 
         function setSortType(column, mySort) {
             var columns = Grid.getAllColumns();
+            if (columns[column].forceSortType && sortLib[columns[column].forceSortType]) {
+                mySort = columns[column].forceSortType;
+            }
             columns[column].sortFunction = sortLib[mySort].cmp;
             columns[column].sortType = mySort;
             columns[column].prefix = (sortLib[mySort].prefix || '');
