@@ -758,6 +758,8 @@ function EventHelper() {
             detectSort();
             if (!isSorted) {
                 defaultSort();
+            } else {
+                doLastSort();
             }
         }
 
@@ -957,21 +959,21 @@ function EventHelper() {
                 (function() {
                     var f = columns[i].field;
                     for (var item = 0; item < items.length; item++) {
-                        if (item > 100) {
+                        if (item > 1000) {
                             break;
                         }
-                        var cellAsString = items[item][f] + ''; // concat is faster than .toString()
-                        if (!cellAsString.length) {
+                        var cell = items[item][f] + ''; // concat is faster than .toString()
+                        if (!cell.length) {
                             continue;
                         }
                         for (var sort in sortLib) {
-                            if (cellAsString.match(sortLib[sort].regex)) {
+                            if (cell.match(sortLib[sort].regex)) {
                                 setSortType(i, sort);
                                 return;
                             }
                         }
                     }
-                    // If we can't find anything in the first 100 rows, default to text sort.
+                    // If we can't find anything in the first 1000 rows, default to text sort.
                     setSortType(i, 'text');
                 })();
             }
@@ -999,24 +1001,18 @@ function EventHelper() {
             columns[column].sortType = mySort;
             columns[column].prefix = (sortLib[mySort].prefix || '');
             columns[column].suffix = (sortLib[mySort].suffix || '');
-            // This has to overwrite default setting.
             columns[column].defaultToAscending = sortLib[mySort].defaultToAscending;
         }
 
         function onSort(column, ascending) {
             isSorted = true;
-            if (sortBy == column.field) {
-                items.reverse();
-            }
-            else {
-                sortBy = column.field;
-                sortAsc = ascending;
-                sortAlgorithm = (column.sortFunction) ? column.sortFunction : sortLib.text.cmp;
-                if (ieSort) {
-                    fastSort(column.field, sortAsc);
-                } else {
-                    items.sort(sortAlgorithm);
-                }
+            sortBy = column.field;
+            sortAsc = ascending;
+            sortAlgorithm = (column.sortFunction) ? column.sortFunction : sortLib.text.cmp;
+            if (ieSort) {
+                fastSort(column.field, sortAsc);
+            } else {
+                items.sort(sortAlgorithm);
             }
             refreshIndex();
             refresh();
@@ -1041,6 +1037,17 @@ function EventHelper() {
                 var sortAsc = (columns[i].defaultSort == 'ascending');
                 Grid.setSortColumn(columns[i].id, sortAsc);
                 onSort(columns[i], sortAsc);
+            }
+        }
+
+        function doLastSort() {
+            if (sortBy) {
+                var columns = Grid.getAllColumns();
+                for (var i = 0; i < columns.length; i++) {
+                    if (sortBy == columns[i].field) {
+                        return onSort(columns[i], sortAsc);
+                    }
+                }
             }
         }
 
