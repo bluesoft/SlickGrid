@@ -26,25 +26,27 @@ function EventHelper() {
         };
         options = $.extend({}, defaults, options);
 
-        var Grid = null;            // Grid instance
-        var ColumnPicker = null;    // ColumnPicker instance
+        var Grid = null;                // Grid instance
+        var ColumnPicker = null;        // ColumnPicker instance
 
-        var idProperty = 'id';      // property holding a unique row id
-        var items = [];	            // data by index
-        var rows = [];              // data by row
-        var index = {};             // indexes by id
+        var idProperty = 'id';          // property holding a unique row id
+        var items = [];	                // data by index
+        var rows = [];                  // data by row
+        var index = {};                 // indexes by id
 
-        var filters = {};           // all filter data
-        var currentFilter = null;   // the filter being edited currently
+        var filters = {};               // all filter data
+        var currentFilter = null;       // the filter being edited currently
         var filterTimeout = null;
 
-        var $dom = {};              // jQuery DOM objects
+        var $container = $(container);  // the SlickGrid container as jQuery object
+        var $dom = {};                  // jQuery DOM objects.
 
         var slideToggleSpeed = 100;
 
         var sortBy = null;
         var sortAsc = true;
         var sortAlgorithm = null;
+        var isSorted = false;
         var ieSort = /MSIE 6/i.test(navigator.userAgent);
 
         var sortLib = {
@@ -296,9 +298,8 @@ function EventHelper() {
         }
 
         function drawControls() {
-            $dom.container = $(container);
-            $dom.filterControls = $('<div class="slickgrid-controls clearfix"></div>').insertBefore($dom.container);
-            $dom.filterFormRow = $('<div class="slickgrid-controls-secondary clearfix"></div>').insertBefore($dom.container).hide();
+            $dom.filterControls = $('<div class="slickgrid-controls clearfix"></div>').insertBefore($container);
+            $dom.filterFormRow = $('<div class="slickgrid-controls-secondary clearfix"></div>').insertBefore($container).hide();
 
             if (ColumnPicker) {
                 $dom.columnPickerToggle = $('<a href="#" class="slickgrid-column-picker slickgrid-pseudo-button" style="float:right;">Edit Columns</a>')
@@ -536,6 +537,7 @@ function EventHelper() {
         function deleteFilter(id) {
             filters[id].v = null;
             $($dom.filterControls[0]).find('div.filter_' + id).remove();
+            delayedRefresh();
         }
 
         function applyFilter() {
@@ -577,6 +579,11 @@ function EventHelper() {
                 }
             }
             else if (filter.type == 'text') {
+                // We might not be filtering anything
+                if (v.text == '') {
+                    deleteFilter(id);
+                    return false;
+                }
                 if (v.type == 'has') {
                     info += ' contains "' + v.text + '"';
                 }
@@ -589,7 +596,6 @@ function EventHelper() {
             ui.addClass('active-filter filter_' + id);
             $('span', ui).click(function() {
                 deleteFilter(id);
-                delayedRefresh();
                 return false;
             });
             $('a', ui).click(function() {
@@ -632,7 +638,7 @@ function EventHelper() {
                     continue;
                 }
                 var column = columns[i].field;
-                filters[column] = (filters[column] == undefined) ? {} : filters[column];
+                filters[column] = filters[column] || {};
                 filters[column].type = columns[i].filter;
                 if (filters[column].type == 'range') {
                     filters[column].range = findColumnRange(column);
@@ -674,10 +680,15 @@ function EventHelper() {
 
         function setItems(data, objectIdProperty) {
             if (objectIdProperty !== undefined) idProperty = objectIdProperty;
+            if (!items && !data) return;
             items = data;
             refreshIndex();
             refreshFilterRanges();
             refresh();
+            detectSort();
+            if (!isSorted) {
+                defaultSort();
+            }
         }
 
         function getItems() {
@@ -837,8 +848,6 @@ function EventHelper() {
                 item,
                 id;
 
-            setTotalsVisibility();
-
             for (var i = 0, z = items.length; i < z; i++) {
                 item = items[i];
 
@@ -861,6 +870,8 @@ function EventHelper() {
         }
 
         function refresh() {
+            setTotalsVisibility();
+
             var countBefore = rows.length;
             var diff = recalc(items, rows); // pass as direct refs to avoid closure perf hit
 
@@ -911,11 +922,8 @@ function EventHelper() {
 
         function setSortType(column, mySort) {
             var columns = Grid.getAllColumns();
-            // Only add sortFunction if not already defined.
-            if (typeof columns[column].sortFunction != 'function') {
-                columns[column].sortFunction = sortLib[mySort].cmp;
-                columns[column].sortType = mySort;
-            }
+            columns[column].sortFunction = sortLib[mySort].cmp;
+            columns[column].sortType = mySort;
             columns[column].prefix = (sortLib[mySort].prefix || '');
             columns[column].suffix = (sortLib[mySort].suffix || '');
             // This has to overwrite default setting.
@@ -923,6 +931,7 @@ function EventHelper() {
         }
 
         function onSort(column, ascending) {
+            isSorted = true;
             if (sortBy == column.field) {
                 items.reverse();
             }
@@ -991,9 +1000,7 @@ function EventHelper() {
             "updateCell":           updateCell,
             "calculateTotals":      calculateTotals,
             "refresh":              refresh,
-            "detectSort":           detectSort,
             "onSort":               onSort,
-            "defaultSort":          defaultSort,
 
             // Events
             "onRowCountChanged":    onRowCountChanged,

@@ -72,15 +72,7 @@ $(function() {
             if (g.options.view.updateTotalsOnFilter) {
                 g.View.calculateTotals();
             }
-        }
-
-        g.View.setGrid(g.Grid);
-        g.View.setColumnPicker(g.ColumnPicker);
-        g.View.drawControls();
-        g.View.setItems(g.data);
-
-        // Detect and save sort algorithm per column.
-        g.View.detectSort();
+        };
 
         g.Grid.onSort = function(column, ascending) {
             g.View.onSort(column, ascending);
@@ -88,7 +80,13 @@ $(function() {
                 g.Session.saveSort(column, ascending);
             }
         };
-        g.View.defaultSort();
+
+        g.View.setGrid(g.Grid);
+        g.View.setColumnPicker(g.ColumnPicker);
+        g.View.drawControls();
+        if (g.data.length) {
+            g.View.setItems(g.data);
+        }
 
         // Update autosized column widths on window resize.
         $(window).resize(function() {
