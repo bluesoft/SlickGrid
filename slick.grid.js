@@ -1152,7 +1152,7 @@ if (!jQuery.fn.drag) {
 
             // shrink
             while (total > availWidth) {
-                if (!shrinkLeeway) { return; }
+                if (!shrinkLeeway) { break; }
                 var shrinkProportion = (total - availWidth) / shrinkLeeway;
                 for (i = 0; i < columns.length && total > availWidth; i++) {
                     c = columns[i];
