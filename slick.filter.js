@@ -342,31 +342,22 @@ function EventHelper() {
             $dom.loader = $('<span class="slickgrid-loading-bar"></span>').appendTo($dom.loaderTrack);
         }
 
-        function updateTotalRowCount(rows) {
-            var speed = 800;
-            var totalWidth = 146;
-            if (totalCount > 0 && totalCount > rows) {
-                var width = Math.ceil((rows / totalCount) * totalWidth);
-                $dom.loader.stop().animate({ width: width }, speed).parent().css({ display: 'inline-block' });
-                $dom.totalRowCount.html('Displaying ' + rows + ' of ' + totalCount + ' rows');
-            }
-            else {
-                if (totalCount > 0) {
-                    if ($dom.loader.css('width')) {
-                        $dom.totalRowCount.css('width', $dom.totalRowCount.css('width'));
-                        $dom.loader.stop().animate({ width: totalWidth }, speed, function() {
-                            setTimeout(function() {
-                                $dom.loader.css('width', 0).parent().hide();
-                                $dom.totalRowCount.css('width', 'auto');
-                            }, 800);
-                        }).parent().css({ display: 'inline-block' });
-                    }
-                    else {
-                        $dom.loader.css('width', 0).parent().hide();
-                    }
+        function setProgressBar(rows) {
+            var w = Math.ceil((rows / totalCount) * 148);
+            $dom.loader.stop().animate({ width: w }, 800, function() {
+                if (rows >= totalCount) {
+                    setTimeout(function() {
+                        $dom.loader.width(0).parent().hide();
+                    }, 300);
                 }
-                $dom.totalRowCount.html('Displaying ' + rows + ' rows');
+            }).parent().css({ display: 'inline-block' });
+        }
+
+        function updateTotalRowCount(rows) {
+            if (totalCount > 0 && rows < totalCount) {
+                rows += ' of ' + totalCount;
             }
+            $dom.totalRowCount.html('Displaying <strong>' + rows + '</strong> rows');
         }
 
         function createColumnPresets() {
@@ -1081,6 +1072,7 @@ function EventHelper() {
             "drawControls":         drawControls,
             "updateTotalRowCount":  updateTotalRowCount,
             "setTotalCount":        setTotalCount,
+            "setProgressBar":       setProgressBar,
             "setItems":             setItems,
             "getItems":             getItems,
             "getItemByIndex":       getItemByIndex,
