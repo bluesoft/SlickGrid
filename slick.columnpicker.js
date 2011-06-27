@@ -46,13 +46,17 @@
                     .data("id", columns[i].id)
                     .appendTo($li);
 
-                if (grid.getColumnIndex(columns[i].id) != null) {
+                if (grid.getColumnIndex(columns[i].id) != null || columns[i].alwaysDisplay) {
                     $input.attr("checked","checked");
                 }
 
                 $("<label for='" + uid + "_columnpicker_" + i + "' />")
                     .text(columns[i].name)
                     .appendTo($li);
+
+                if (columns[i].alwaysDisplay) {
+                    $li.hide();
+                }
             }
 
             if (options.showAutoResize || options.showSyncResize) {
@@ -100,7 +104,7 @@
             for (var i = 0; i < allColumns.length; i++) {
                 var c = allColumns[i];
                 // columns with special 'all' preset are always displayed
-                if ($.inArray(preset, c.presets) !== -1 || $.inArray('all', c.presets) !== -1) {
+                if ($.inArray(preset, c.presets) !== -1 || $.inArray('all', c.presets) !== -1 || c.alwaysDisplay) {
                     allColumns[i].visible = true;
                     visibleColumns.push(allColumns[i]);
                 }

@@ -64,6 +64,7 @@ The dataGrids init process happens on jQuery's ready() event, which is why the f
 * asyncPostRender     - Function responsible for manipulating the cell DOM node after it has been rendered (called in the background).
 * behavior            - Configures the column with one of several available predefined behaviors:  "select", "move", "selectAndMove".
 * defaultToAscending  - (default true) If false, the column sorting will default to descending.
+* alwaysDisplay       - (default false) If true, the column will not appear in the ColumnPicker and will always be displayed on all presets.
 
 ## Usage Example #1, no AJAX
 
