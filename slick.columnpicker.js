@@ -39,6 +39,9 @@
             }
 
             for (var i=0; i<columns.length; i++) {
+                
+            	var alwayHidden = columns[i].alwaysHidden && (columns[i].alwaysHidden == 'true' || columns[i].alwaysHidden == true);
+            	
                 $li = $("<div />").appendTo($menu);
 
                 $input = $("<input type='checkbox' />")
@@ -47,14 +50,15 @@
                     .appendTo($li);
 
                 if (grid.getColumnIndex(columns[i].id) != null || columns[i].alwaysDisplay) {
-                    $input.attr("checked","checked");
+                	if (!alwayHidden)
+                		$input.attr("checked","checked");
                 }
 
                 $("<label for='" + uid + "_columnpicker_" + i + "' />")
                     .text(columns[i].name)
                     .appendTo($li);
 
-                if (columns[i].alwaysDisplay) {
+                if (columns[i].alwaysDisplay || alwayHidden) {
                     $li.hide();
                 }
             }
@@ -66,7 +70,7 @@
             if (options.showAutoResize) {
                 $li = $("<div />").appendTo($menu);
                 $input = $("<input type='checkbox' id='" + uid + "_autoresize' />").appendTo($li);
-                $("<label for='" + uid + "_autoresize'>Force Fit Columns</label>").appendTo($li);
+                $("<label for='" + uid + "_autoresize'>Redimensionar</label>").appendTo($li);
                 if (grid.getOptions().forceFitColumns) {
                     $input.attr("checked", "checked");
                 }
@@ -75,7 +79,7 @@
             if (options.showSyncResize) {
                 $li = $("<div />").appendTo($menu);
                 $input = $("<input type='checkbox' id='" + uid + "_syncresize' />").appendTo($li);
-                $("<label for='" + uid + "_syncresize'>Synchronous Resizing</label>").appendTo($li);
+                $("<label for='" + uid + "_syncresize'>Redimensionar Sincronamente</label>").appendTo($li);
                 if (grid.getOptions().syncColumnCellResize) {
                     $input.attr("checked", "checked");
                 }
@@ -104,13 +108,17 @@
             for (var i = 0; i < allColumns.length; i++) {
                 var c = allColumns[i];
                 // columns with special 'all' preset are always displayed
-                if ($.inArray(preset, c.presets) !== -1 || $.inArray('all', c.presets) !== -1 || c.alwaysDisplay) {
+                if (c.alwaysHidden){
+                	allColumns[i].visible = false;
+                } 
+                else if ($.inArray(preset, c.presets) !== -1 || $.inArray('all', c.presets) !== -1 || c.alwaysDisplay) {
                     allColumns[i].visible = true;
                     visibleColumns.push(allColumns[i]);
                 }
                 else {
                     allColumns[i].visible = false;
                 }
+                
             }
             grid.setAllColumns(allColumns);
             grid.setColumns(visibleColumns);
