@@ -31,7 +31,7 @@ function EventHelper() {
         var ColumnPicker = null;        // ColumnPicker instance
 
         var idProperty = 'id';          // property holding a unique row id
-        var items = [];	                // data by index
+        var items = [];                    // data by index
         var rows = [];                  // data by row
         var index = {};                 // indexes by id
         var totalCount = 0;             // total row count, defined server-side
@@ -338,23 +338,14 @@ function EventHelper() {
             $dom.filterFormRow = $('<div class="slickgrid-controls-secondary clearfix"></div>').insertBefore($container).hide();
 
             if (ColumnPicker) {
-                $dom.columnPickerToggle = $('<a href="#" class="slickgrid-column-picker slickgrid-pseudo-button" style="float:right;">Edit Columns</a>')
+                $dom.columnPickerToggle = $('<a href="#" class="slickgrid-column-picker slickgrid-pseudo-button" style="float:right;">Colunas</a>')
                     .click(function(e) {
                         ColumnPicker.displayContextMenu(e);
                         return false;
                     })
                     .appendTo($dom.filterControls);
-                if (options.showColumnPresets) {
-                    var presets = createColumnPresets();
-                    if (presets) {
-                        $(presets).appendTo($dom.filterControls);
-                        $('a.slickgrid-column-preset').click(useColumnPreset);
-                        $('a.slickgrid-column-preset:first').addClass('last'); // float:right elements are in reverse order
-                        $('a.slickgrid-column-preset:last').addClass('active first');
-                    }
-                }
             }
-            $dom.addNewFilter = $('<a href="#" class="add-new-filter slickgrid-pseudo-button">Add Filter</a>')
+            $dom.addNewFilter = $('<a href="#" class="add-new-filter slickgrid-pseudo-button">Filtrar</a>')
                 .click(function() {
                     if ($dom.filterFormRow.css('display') == 'none') {
                         createColumnSelector();
@@ -390,33 +381,6 @@ function EventHelper() {
             $dom.totalRowCount.html('Displaying <strong>' + rows + '</strong> rows');
         }
 
-        function createColumnPresets() {
-            var i, j;
-            var columns = Grid.getAllColumns();
-            var presets = [];
-            for (i = 0; i < columns.length; i++) {
-                var c = columns[i];
-                c.presets = c.presets || [];
-                c.presets.push('All Columns'); //
-                if (c.visible && c.visible !== false) {
-                    c.presets.push('Default');
-                }
-                for (j = 0; j < c.presets.length; j++) {
-                    var preset = c.presets[j];
-                    if (preset != 'Default' && preset != 'All Columns' && preset != 'all') {
-                        presets = addOnce(preset, presets);
-                    }
-                }
-            }
-            presets.push('All Columns');
-            presets.unshift('Default');
-            var output = '';
-            for (i = presets.length - 1; i >= 0; i--) {
-                output += '<a href="#" class="slickgrid-column-preset slickgrid-pseudo-button" style="float:right;">' + presets[i] + '</a>';
-            }
-            return output;
-        }
-
         function useColumnPreset() {
             var preset = $(this).text();
             $(this).siblings('a.active').removeClass('active').end().addClass('active');
@@ -428,7 +392,7 @@ function EventHelper() {
         function createColumnSelector() {
             $dom.filterFormRow.empty();
             $dom.columnSelector = $('<select></select>').appendTo($dom.filterFormRow);
-            $('<option value="">Choose a Column</option>').appendTo($dom.columnSelector);
+            $('<option value="">Colunas</option>').appendTo($dom.columnSelector);
             var columns = Grid.getAllColumns();
             for (var i = 0; i < columns.length; i++) {
                 if (!currentFilter && (!columns[i].filter || filters[columns[i].id].v)) {
@@ -528,8 +492,8 @@ function EventHelper() {
                     .appendTo($dom.filterForm);
 
                 var types = [
-                    { value: 'has', title: 'Contains' },
-                    { value: 'not', title: "Doesn't Contain" }
+                    { value: 'has', title: 'Contém' },
+                    { value: 'not', title: "Não contém" }
                 ];
                 for (var i = 0; i < types.length; i++) {
                     var type = types[i];
